@@ -1,0 +1,18 @@
+body {
+    background-color: white;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+button {
+    background-color: white;
+    color: black;
+}
+
+input {
+    background-color: white;
+    color: black;
+}
