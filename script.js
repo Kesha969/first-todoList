@@ -118,3 +118,4 @@ taskInput.addEventListener('keypress', function(e) {
 
 // При загрузке страницы
 renderTasks();
+window.onload = () => document.getElementById('task-input').focus();
