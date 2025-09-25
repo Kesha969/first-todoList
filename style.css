@@ -22,6 +22,7 @@ button {
     width: 20px;
     height: 20px;
     position: relative;
+    justify-content: center;
 }
 
 .delete-btn::before, .delete-btn::after {
@@ -46,7 +47,53 @@ button {
     background-color: #cc0000;
 }
 
+.complete-btn {
+    border: 2px solid #4CAF50;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    transition: all 0.3s ease;
+}
+
 input {
     background-color: white;
     color: black;
+}
+
+.task-text {
+    flex-grow: 1;
+    margin: 0 10px;
+}
+
+.completed {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+button, .complete-btn, .delete-btn {
+    text-decoration: none !important;
+}
+
+li {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    padding: 8px 5px;
+    margin-bottom: 5px;
+}
+
+li:hover {
+    background-color: #f5f5f5;
+}
+
+li span:first-child {
+    flex-grow: 1;
+    margin: 0 10px;
 }
