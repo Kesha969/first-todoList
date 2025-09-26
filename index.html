@@ -11,7 +11,13 @@
             <!--Место для формы и списка-->
             
             <input type="text" id="task-input">
-            <button id="add-button">Добавить</button>
+            <button id="add-button" class="addBtn">Добавить</button>
+            <label for="dropdownFilter">Фильтр</label>
+            <select id="filter", name="filter">
+                <option value="all">Все</option>
+                <option value="checked">Завершенные</option>
+                <option value="unchecked">Незавершенные</option>
+            </select>
             <ul id="task-list"></ul>
         </div>
         <script src="script.js"></script>

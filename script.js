@@ -1,6 +1,8 @@
 const taskInput = document.querySelector('#task-input');
 const addButton = document.querySelector('#add-button');
 const taskList = document.querySelector('#task-list');
+let select = document.querySelector('#filter');
+let filterSelect = document.querySelector('#filter');
 
 // Загружаем задачи из localStorage при загрузке страницы
 let tasks = [];
@@ -13,12 +15,30 @@ try {
 catch (err) {
     console.error('Ошибка загрузки задач: ', err);
     tasks = [];
-
 }
+
+// Загружаем фильтр из localStorage при загрузке страницы
+let currentFilter = 'all'; // значение по умолчанию
+
+try {
+    const storedFilter = localStorage.getItem('filter');
+    if (storedFilter) {
+        currentFilter = storedFilter;
+    }
+} catch (err) {
+    console.error('Ошибка загрузки фильтра: ', err);
+}
+// Устанавливаем выбранное значение в select
+filterSelect.value = currentFilter;
 
 // Функция для сохранения задач в localStorage
 function saveTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Функция для сохранения фильтра в localStorage
+function saveFilter() {
+    localStorage.setItem('filter', filterSelect.value);
 }
 
 // Функция для отрисовки списка задач
@@ -26,8 +46,21 @@ function renderTasks() {
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
 
+    let tasksToShow = []
+    switch(currentFilter) {
+        case 'all':
+            tasksToShow = tasks;
+        break;
+        case 'checked':
+            tasksToShow = tasks.filter(task => task.completed);
+        break;
+        case 'unchecked':
+            tasksToShow = tasks.filter(task => !task.completed);;
+        break;
+    }
+
     // Создаем элементы для каждой задачи
-    tasks.forEach((task, index) => {
+    tasksToShow.forEach((task, index) => {
         const newItem = document.createElement('li');
         
         // Создаем отдельный элемент для текста задачи
@@ -60,7 +93,7 @@ function renderTasks() {
         completeBtn.appendChild(checkmark);
         completeBtn.onclick = function(e) {
             e.stopPropagation();
-            toggleTaskCompletion(index);
+            toggleTaskCompletion(task.id);
         }
 
         // Кнопка удаления
@@ -93,7 +126,6 @@ function addTask() {
     });
 
     // Сохраняем и рендерим
-    tasks.unshift();
     saveTasks();
     renderTasks();
 
@@ -101,6 +133,13 @@ function addTask() {
     taskInput.value = '';
     document.getElementById('task-input').focus();
 
+}
+
+// Фильтр задач
+function taskFilter(select) {
+    if (tasksFiltered && tasks.length > 0) {
+        tasksFiltered = tasksFiltered.filter(task => task.completed !== select);
+    }
 }
 
 // Удаление задачи
@@ -118,19 +157,28 @@ function deleteTask(id) {
     document.getElementById('task-input').focus();
 }
 
-// Переключение статуса выролнения
-function toggleTaskCompletion(index) {
-    tasks[index].completed = !tasks[index].completed;
-    
-    // Сохраняем и рендерим
-    saveTasks();
-    renderTasks();
-    document.getElementById('task-input').focus();
+// Переключение статуса выполнения
+function toggleTaskCompletion(id) {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.completed = !task.completed;
 
+        //сохраняем и рендерим
+        saveTasks();
+        renderTasks();
+    }
+    document.getElementById('task-input').focus();
 }
 
-// Обработчик событий
+// Обработчик событий для addButton
 addButton.addEventListener('click', addTask);
+
+// Обработчик событий для select
+filterSelect.addEventListener('change', function() {
+    currentFilter = filterSelect.value; // обновляем текущий фильтр
+    saveFilter(); // сохраняем в localStorage
+    renderTasks(); // перерисовываем задачи
+});
 
 // Добавление задачи при нажатии 'Enter'
 taskInput.addEventListener('keypress', function(e) {
