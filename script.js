@@ -41,10 +41,28 @@ function saveFilter() {
     localStorage.setItem('filter', filterSelect.value);
 }
 
+// Функция для обновления счетчика задач
+function updateTasksCounter() {
+    const totalCounter = document.querySelector('#total-counter');
+    const completedCounter = document.querySelector('#completed-counter');
+    const uncompletedCounter = document.querySelector('#uncompleted-counter');
+
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(task => task.completed).length;
+    const uncompletedTasks = totalTasks - completedTasks;
+
+    totalCounter.textContent = totalTasks;
+    completedCounter.textContent = completedTasks;
+    uncompletedCounter.textContent = uncompletedTasks;
+}
+
 // Функция для отрисовки списка задач
 function renderTasks() {
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
+
+    // Обновляем счетчик задач
+    updateTasksCounter();
 
     let tasksToShow = []
     switch(currentFilter) {
@@ -73,13 +91,13 @@ function renderTasks() {
             taskText.classList.add('completed');
         }
 
-        // Кнопка выполнения
-        const completeBtn = document.createElement('button');
-        completeBtn.className = 'complete-btn';
-
         // Создаем элемент для галочки
         const checkmark = document.createElement('span');
         checkmark.style.cssText = 'color: white; font-weight: bold; font-size: 12px;';
+
+        // Кнопка выполнения
+        const completeBtn = document.createElement('button');
+        completeBtn.className = 'complete-btn';
         
         if (task.completed) {
             completeBtn.classList.add('checked');

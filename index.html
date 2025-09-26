@@ -8,16 +8,40 @@
     <BODY>
         <div class="container">
             <h1>Мой список дел</h1>
+
+            <!-- Блок для счетчика -->
+            <div class="tasks-counter">
+                <div class="counter-item">
+                    <span class="counter-label">Всего:</span>
+                    <span class="counter-value" id="total-counter">0</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-label">Выполнено:</span>
+                    <span class="counter-value" id="completed-counter">0</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-label">Осталось:</span>
+                    <span class="counter-value" id="uncompleted-counter">0</span>
+                </div>
+            </div>
+
             <!--Место для формы и списка-->
-            
-            <input type="text" id="task-input">
-            <button id="add-button" class="addBtn">Добавить</button>
-            <label for="dropdownFilter">Фильтр</label>
-            <select id="filter", name="filter">
-                <option value="all">Все</option>
-                <option value="checked">Завершенные</option>
-                <option value="unchecked">Незавершенные</option>
-            </select>
+            <div class="input-filter-row">
+                <div class="input-group">
+                    <input type="text" id="task-input" placeholder="Добавить новую задачу...">
+                    <button id="add-button" class="addBtn">Добавить</button>
+                </div>
+
+                <div class="filter-group">
+                    <label for="dropdownFilter">Фильтр</label>
+                    <select id="filter", name="filter">
+                        <option value="all">Все</option>
+                        <option value="checked">Завершенные</option>
+                        <option value="unchecked">Незавершенные</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Список задач -->
             <ul id="task-list"></ul>
         </div>
         <script src="script.js"></script>
