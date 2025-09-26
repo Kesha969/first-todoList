@@ -3,7 +3,18 @@ const addButton = document.querySelector('#add-button');
 const taskList = document.querySelector('#task-list');
 
 // Загружаем задачи из localStorage при загрузке страницы
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let tasks = [];
+try {
+    const storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+        tasks = JSON.parse(storedTasks);
+    }
+}
+catch (err) {
+    console.error('Ошибка загрузки задач: ', err);
+    tasks = [];
+
+}
 
 // Функция для сохранения задач в localStorage
 function saveTasks() {
@@ -58,7 +69,7 @@ function renderTasks() {
         deleteBtn.innerHTML = '';
         deleteBtn.onclick = function(e) {
             e.stopPropagation(); // при клике на крестик не срабатывал клик на задаче
-            deleteTask(index);
+            deleteTask(task.id);
         }
 
         // Собираем в правильном порядке
@@ -76,25 +87,35 @@ function addTask() {
 
     // Добавление задачи в массив
     tasks.push({
+        id: crypto.randomUUID(),
         text: taskText,
         completed: false
     });
 
     // Сохраняем и рендерим
+    tasks.unshift();
     saveTasks();
     renderTasks();
 
     // Очищаем поле ввода
     taskInput.value = '';
+    document.getElementById('task-input').focus();
+
 }
 
 // Удаление задачи
-function deleteTask(index) {
-    tasks.splice(index, 1); // Удаляем из массива
+function deleteTask(id) {
+    if (tasks && tasks.length > 0) {
+        tasks = tasks.filter(task => task.id !== id); // Удаляем из массива
+    }
+    else {
+        tasks = [];
+    }
 
     // Сохраняем и рендерим
     saveTasks();
     renderTasks();
+    document.getElementById('task-input').focus();
 }
 
 // Переключение статуса выролнения
@@ -104,6 +125,8 @@ function toggleTaskCompletion(index) {
     // Сохраняем и рендерим
     saveTasks();
     renderTasks();
+    document.getElementById('task-input').focus();
+
 }
 
 // Обработчик событий
