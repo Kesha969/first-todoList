@@ -7,9 +7,10 @@ const addButton = document.querySelector('#add-button');
 const taskList = document.querySelector('#task-list');
 const taskCounter = document.querySelector('#task-counter');
 const filterSelect = document.querySelector('#filter');
+let checkActiveTask = false;
 
 // Отображение задач
-export function renderTasks(tasks, filter, onToggle, onDelete) {
+export function renderTasks(tasks, filter, onToggle, onDelete, onEdit) {
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
 
@@ -33,54 +34,73 @@ export function renderTasks(tasks, filter, onToggle, onDelete) {
     tasksToShow.forEach((task, index) => {
         const newItem = document.createElement('li');
         
-        // Создаем отдельный элемент для текста задачи
-        const taskText = document.createElement('span');
-        taskText.textContent = task.text;
-        taskText.className = 'task-text'; // Добавляем класс для текста
+        if (checkActiveTask && Storage.currentTask === task) {
+            // Создаем отдельный элемент для изменения текста задачи
+            const taskText = document.createElement('input');
+            taskText.setAttribute('value', task.text);
+            taskText.className = 'task-input'; 
 
-        // Класс для выполнения задач (только для текста)
-        if (task.completed) {
-            taskText.classList.add('completed');
+            newItem.appendChild(taskText); 
+            taskList.appendChild(newItem);
+        } 
+        else {
+            // Создаем отдельный элемент для текста задачи
+            const taskText = document.createElement('span');
+            taskText.place = task.text;
+            taskText.className = 'task-text'; 
+
+            // Класс для выполнения задач (только для текста)
+            if (task.completed) {
+                taskText.classList.add('completed');
+            }
+
+            // Создаем элемент для галочки
+            const checkmark = document.createElement('span');
+            checkmark.style.cssText = 'color: white; font-weight: bold; font-size: 12px;';
+
+            // Кнопка выполнения
+            const completeBtn = document.createElement('button');
+            completeBtn.className = 'complete-btn';
+            
+            if (task.completed) {
+                completeBtn.classList.add('checked');
+                completeBtn.style.backgroundColor = '#4CAF50';
+                checkmark.textContent = '✓';
+            } else {
+                completeBtn.style.backgroundColor = 'none';
+                checkmark.textContent = '';
+            }
+            
+            completeBtn.appendChild(checkmark);
+            // Кнопка выполнения
+            completeBtn.onclick = function(e) {
+                e.stopPropagation();
+                onToggle(task.id);
+            }
+
+            // Двойной клик по тексту
+            taskText.addEventListener('dblclick', function(e) {
+                e.stopPropagation();
+                checkActiveTask = true;
+                Storage.currentTask = task;
+                onEdit(task.id, task.text);
+            });
+
+            // Кнопка удаления
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className  = 'delete-btn';
+            deleteBtn.innerHTML = '';
+            deleteBtn.onclick = function(e) {
+                e.stopPropagation();
+                onDelete(task.id);
+            }
+
+            // Собираем в правильном порядке
+            newItem.appendChild(taskText); 
+            newItem.appendChild(completeBtn);
+            newItem.appendChild(deleteBtn);
+            taskList.appendChild(newItem);
         }
-
-        // Создаем элемент для галочки
-        const checkmark = document.createElement('span');
-        checkmark.style.cssText = 'color: white; font-weight: bold; font-size: 12px;';
-
-        // Кнопка выполнения
-        const completeBtn = document.createElement('button');
-        completeBtn.className = 'complete-btn';
-        
-        if (task.completed) {
-            completeBtn.classList.add('checked');
-            completeBtn.style.backgroundColor = '#4CAF50';
-            checkmark.textContent = '✓';
-        } else {
-            completeBtn.style.backgroundColor = 'none';
-            checkmark.textContent = '';
-        }
-        
-        completeBtn.appendChild(checkmark);
-        // Кнопка выполнения
-        completeBtn.onclick = function(e) {
-            e.stopPropagation();
-            onToggle(task.id);
-        }
-
-        // Кнопка удаления
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className  = 'delete-btn';
-        deleteBtn.innerHTML = '';
-        deleteBtn.onclick = function(e) {
-            e.stopPropagation();
-            onDelete(task.id);
-        }
-
-        // Собираем в правильном порядке
-        newItem.appendChild(taskText); 
-        newItem.appendChild(completeBtn);
-        newItem.appendChild(deleteBtn);
-        taskList.appendChild(newItem);
     });
 }
 

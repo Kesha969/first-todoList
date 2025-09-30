@@ -40,8 +40,24 @@ export function toggleTaskCompletion(id) {
     }
 }
 
+export function editTask(id, newText) {
+    const task = tasks.find(task => task.id === id);
+    if (task && newText.trim()) {
+        task.text = newText.trim();
+        Storage.saveTasks(tasks);
+        return true;
+    }
+    return false;
+}
+
 // Установка фильтра
 export function setFilter(filter) {
     currentFilter = filter;
     Storage.saveFilter(filter);
+}
+
+// Текущая задача
+export function setCurrentTask(task) {
+    Storage.currentTask = task;
+    View.checkActiveTask = true;
 }

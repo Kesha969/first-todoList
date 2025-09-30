@@ -1,3 +1,5 @@
+let currentTask; 
+
 // Сохранение переменных в localStorage
 export function saveTasks(tasks) {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -23,3 +25,5 @@ export function saveFilter(filter) {
 export function loadFilter() {
     return localStorage.getItem('filter') || 'all';
 }
+
+// 

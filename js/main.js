@@ -15,13 +15,21 @@ function onDelete(taskId) {
     refreshView();
 }
 
+function onEdit(taskId, newText) {
+    if (newText !== undefined) {
+        State.editTask(taskId, newText);
+    }
+    refreshView();  
+}
+
 function refreshView() {
     console.log('refreshView вызван');
     View.renderTasks(
         State.getTasks(), 
         State.getCurrentFilter(), 
         onToggle, 
-        onDelete
+        onDelete,
+        onEdit
     );
     View.updateCounter(State.getTasks());
 }
