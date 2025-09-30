@@ -1,5 +1,4 @@
-import { toggleTaskCompletion } from "./state.js";
-import { deleteTask } from "./state.js";
+import * as State from "./state.js";
 
 // Получаем DOM элементы
 const taskInput = document.querySelector('#task-input');
@@ -7,10 +6,9 @@ const addButton = document.querySelector('#add-button');
 const taskList = document.querySelector('#task-list');
 const taskCounter = document.querySelector('#task-counter');
 const filterSelect = document.querySelector('#filter');
-let checkActiveTask = false;
 
 // Отображение задач
-export function renderTasks(tasks, filter, onToggle, onDelete, onEdit) {
+export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
 
@@ -33,20 +31,41 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit) {
     // Создаем элементы для каждой задачи
     tasksToShow.forEach((task, index) => {
         const newItem = document.createElement('li');
+        const isEditing = State.getEditingTaskId() === task.id;
+        const isSelected = State.getSelectedTaskId() === task.id;
         
-        if (checkActiveTask && Storage.currentTask === task) {
-            // Создаем отдельный элемент для изменения текста задачи
-            const taskText = document.createElement('input');
-            taskText.setAttribute('value', task.text);
-            taskText.className = 'task-input'; 
-
-            newItem.appendChild(taskText); 
+        if (isEditing) {
+            // Делаем весь элемент li некликабельным
+            newItem.style.pointerEvents = 'none';
+            
+            const input = document.createElement('input');
+            input.value = task.text;
+            input.className = 'task-input';
+            
+            // Делаем ТОЛЬКО input кликабельным
+            input.style.pointerEvents = 'auto';
+            
+            setTimeout(() => input.focus(), 0);
+            
+            input.addEventListener('blur', () => {
+                onEdit(task.id, input.value);
+                State.stopEditing();
+            });
+            
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') input.blur();
+                if (e.key === 'Escape') {
+                    State.stopEditing();
+                    // refreshView() вызовется автоматически через onEdit
+                }
+            });
+            
+            newItem.appendChild(input);
             taskList.appendChild(newItem);
-        } 
-        else {
-            // Создаем отдельный элемент для текста задачи
+        } else {
+            // Обычный режим - показываем span
             const taskText = document.createElement('span');
-            taskText.place = task.text;
+            taskText.textContent = task.text;
             taskText.className = 'task-text'; 
 
             // Класс для выполнения задач (только для текста)
@@ -72,19 +91,10 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit) {
             }
             
             completeBtn.appendChild(checkmark);
-            // Кнопка выполнения
             completeBtn.onclick = function(e) {
                 e.stopPropagation();
                 onToggle(task.id);
             }
-
-            // Двойной клик по тексту
-            taskText.addEventListener('dblclick', function(e) {
-                e.stopPropagation();
-                checkActiveTask = true;
-                Storage.currentTask = task;
-                onEdit(task.id, task.text);
-            });
 
             // Кнопка удаления
             const deleteBtn = document.createElement('button');
@@ -94,14 +104,29 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit) {
                 e.stopPropagation();
                 onDelete(task.id);
             }
-
+            
             // Собираем в правильном порядке
             newItem.appendChild(taskText); 
             newItem.appendChild(completeBtn);
             newItem.appendChild(deleteBtn);
+
+            newItem.addEventListener('dblclick', () => {
+                if (!task.completed) {
+                    onStartEdit(task.id);
+                }
+            });
+
+            newItem.addEventListener('click', (e) => {
+                // Проверяем что кликнули не по кнопкам
+                if (e.target !== completeBtn && e.target !== deleteBtn) {
+                    onSelectTask(task.id);
+                }
+            });
+
             taskList.appendChild(newItem);
         }
     });
+
 }
 
 // Обработка счетчика

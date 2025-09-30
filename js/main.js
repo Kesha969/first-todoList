@@ -15,11 +15,24 @@ function onDelete(taskId) {
     refreshView();
 }
 
+function onStartEdit(taskId) {
+    console.log('onStartEdit вызван с ID:', taskId);
+    State.startEditing(taskId);
+    refreshView();
+}
+
 function onEdit(taskId, newText) {
-    if (newText !== undefined) {
+    if (newText !== undefined && newText.trim() !== '') {
         State.editTask(taskId, newText);
     }
-    refreshView();  
+    State.stopEditing(); // ← всегда завершаем редактирование
+    refreshView();
+}
+
+function onSelectTask(taskId) {
+    State.selectTask(taskId);
+    refreshView();
+    // Здесь потом откроем окно с информацией
 }
 
 function refreshView() {
@@ -29,7 +42,9 @@ function refreshView() {
         State.getCurrentFilter(), 
         onToggle, 
         onDelete,
-        onEdit
+        onEdit,
+        onStartEdit,
+        onSelectTask
     );
     View.updateCounter(State.getTasks());
 }

@@ -2,6 +2,8 @@ import * as Storage from './storage.js';
 
 let tasks = [];
 let currentFilter = 'all';
+let editingTaskId = null;
+let selectedTaskId = null;
 
 // Инициализация
 export function initState() {
@@ -57,7 +59,29 @@ export function setFilter(filter) {
 }
 
 // Текущая задача
-export function setCurrentTask(task) {
-    Storage.currentTask = task;
+export function setCurrentTask(id) {
+    Storage.currentTaskId = id;
     View.checkActiveTask = true;
+}
+
+export function startEditing(taskId) {
+    editingTaskId = taskId;
+    selectedTaskId = null;
+}
+
+export function stopEditing() {
+    editingTaskId = null;
+}
+
+export function selectTask(taskId) {
+    selectedTaskId = taskId;
+    editingTaskId = null;
+}
+
+export function getEditingTaskId() {
+    return editingTaskId;
+}
+
+export function getSelectedTaskId() {
+    return selectedTaskId;
 }

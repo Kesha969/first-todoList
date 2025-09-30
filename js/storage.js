@@ -1,4 +1,4 @@
-let currentTask; 
+let currentTaskId; 
 
 // Сохранение переменных в localStorage
 export function saveTasks(tasks) {

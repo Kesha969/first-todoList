@@ -214,6 +214,14 @@ li:hover {
     line-height: 1.4;
 }
 
+/* Поля ввода при редактировании */
+.task-text {
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+    flex-grow: 1; /* Растягивается на всю ширину */
+}
+
 .completed {
     text-decoration: line-through;
     opacity: 0.6;
@@ -288,6 +296,10 @@ li:hover {
 
 .delete-btn:hover::before, .delete-btn:hover::after {
     background-color: #c0392b;
+}
+
+.complete-btn, .delete-btn {
+    margin-left: 10px;
 }
 
 /* ===== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ===== */
