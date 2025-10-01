@@ -54,10 +54,18 @@ function initApp() {
     const state = State.initState();
     refreshView();
     setupEventListeners();
+    
+    // Устанавливаем активную кнопку фильтра
+    const currentFilter = State.getCurrentFilter();
+    const activeBtn = document.querySelector(`[data-filter="${currentFilter}"]`);
+    if (activeBtn) {
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        activeBtn.classList.add('active');
+    }
 }
 
 function setupEventListeners() {
-    const { addButton, taskInput, filterSelect } = View.getDOMElements();
+    const { addButton, taskInput } = View.getDOMElements(); // ← УБРАТЬ filterSelect
     
     // Обработчик добавления задачи
     addButton.addEventListener('click', () => {
@@ -69,10 +77,18 @@ function setupEventListeners() {
         }
     });
     
-    // Обработчик фильтра
-    filterSelect.addEventListener('change', (e) => {
-        State.setFilter(e.target.value);
-        refreshView();
+    // обработчик для кнопок-фильтров
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const filter = e.currentTarget.dataset.filter;
+            State.setFilter(filter);
+            refreshView();
+            
+            // Обновляем активную кнопку
+            filterButtons.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+        });
     });
     
     // Enter для добавления

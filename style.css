@@ -105,6 +105,14 @@ h1 {
     transform: translateY(-1px);
 }
 
+.task.adding {
+    animation: slidedown 0.3s ease;
+}
+
+.task.removing {
+    animation: slideup 0.3s ease;
+}
+
 .addBtn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -228,6 +236,35 @@ li:hover {
     color: #7f8c8d;
 }
 
+/* ===== КНОПКИ УПРАВЛЕНИЯ ФИЛЬТРАМИ ==== */
+.filter-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.filter-btn.active {
+    border-color: #667eea;
+    background: #667eea;
+}
+
+.filter-btn.active svg {
+    stroke: white;
+}
+
 /* ===== КНОПКИ УПРАВЛЕНИЯ ЗАДАЧАМИ ===== */
 .complete-btn {
     border: 2px solid #4CAF50;
@@ -257,45 +294,24 @@ li:hover {
     transition: all 0.3s ease;
 }
 
+.complete-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
 .delete-btn {
     background: none;
     border: none;
     cursor: pointer;
-    margin-left: 10px;
-    width: 20px;
-    height: 20px;
-    position: relative;
-    z-index: 2;
-    opacity: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
-}
-
-.delete-btn::before, .delete-btn::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #e74c3c;
-    transition: all 0.3s ease;
-}
-
-.delete-btn::before {
-    transform: rotate(45deg);
-}
-
-.delete-btn::after {
-    transform: rotate(-45deg);
 }
 
 .delete-btn:hover {
     opacity: 1;
     transform: scale(1.1);
-}
-
-.delete-btn:hover::before, .delete-btn:hover::after {
-    background-color: #c0392b;
 }
 
 .complete-btn, .delete-btn {
@@ -345,6 +361,17 @@ li:hover {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
     }
 }
 

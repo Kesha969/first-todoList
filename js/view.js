@@ -7,6 +7,40 @@ const taskList = document.querySelector('#task-list');
 const taskCounter = document.querySelector('#task-counter');
 const filterSelect = document.querySelector('#filter');
 
+function initFilterButtons() {
+    const filterButtons = {
+        all: document.querySelector('[data-filter="all"]'),
+        checked: document.querySelector('[data-filter="checked"]'),
+        unchecked: document.querySelector('[data-filter="unchecked"]')
+    };
+    
+    filterButtons.all.innerHTML = SVG_Icons.list;
+    filterButtons.checked.innerHTML = SVG_Icons.circleCheck;
+    filterButtons.unchecked.innerHTML = SVG_Icons.circle;
+}
+
+initFilterButtons();
+
+const SVG_Icons = {
+    check: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>',
+    trash: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+    list: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-icon lucide-list"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>',
+    circleCheck: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-icon lucide-circle-check"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
+    circle: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-icon lucide-circle"><circle cx="12" cy="12" r="10"/></svg>'
+};
+
+/*filterSelect.innerHTML = `
+    <option value="all">
+        ${SVG_Icons.list} Все
+    </option>
+    <option value="checked">
+        ${SVG_Icons.circleCheck} Завершенные
+    </option>
+    <option value="unchecked">
+        ${SVG_Icons.circle} Незавершенные
+    </option>
+`;*/
+
 // Отображение задач
 export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
     // Очищаем список перед рендерингом
@@ -70,14 +104,6 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
                 taskText.classList.add('completed');
             }
 
-            // Добавляем класс для анимации появления
-            newItem.classList.add('task', 'adding');
-
-            // Убираем класс анимации после ее завершения
-            setTimeout(() => {
-                newItem.classList.remove('adding');
-            }, 300);
-
             // Создаем элемент для галочки
             const checkmark = document.createElement('span');
             checkmark.style.cssText = 'color: white; font-weight: bold; font-size: 12px;';
@@ -85,17 +111,16 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
             // Кнопка выполнения
             const completeBtn = document.createElement('button');
             completeBtn.className = 'complete-btn';
-            
+
             if (task.completed) {
                 completeBtn.classList.add('checked');
                 completeBtn.style.backgroundColor = '#4CAF50';
-                checkmark.textContent = '✓';
+                completeBtn.innerHTML = SVG_Icons.check;
             } else {
                 completeBtn.style.backgroundColor = 'none';
-                checkmark.textContent = '';
+                completeBtn.innerHTML = ''; 
             }
             
-            completeBtn.appendChild(checkmark);
             completeBtn.onclick = function(e) {
                 e.stopPropagation();
                 onToggle(task.id);
@@ -104,7 +129,7 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
             // Кнопка удаления
             const deleteBtn = document.createElement('button');
             deleteBtn.className  = 'delete-btn';
-            deleteBtn.innerHTML = '';
+            deleteBtn.innerHTML = SVG_Icons.trash;
             deleteBtn.onclick = function(e) {
                 e.stopPropagation();
                 onDelete(task.id);
@@ -151,7 +176,12 @@ export function updateCounter(tasks) {
 
 // Получение DOM элементов
 export function getDOMElements() {
-    return { taskInput, addButton, taskList, taskCounter, filterSelect };
+    return { 
+        taskInput, 
+        addButton, 
+        taskList, 
+        taskCounter 
+    };
 }
 
 // Очистка строки ввода

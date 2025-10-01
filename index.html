@@ -29,16 +29,17 @@
             <div class="input-filter-row">
                 <div class="input-group">
                     <input type="text" id="task-input" placeholder="Добавить новую задачу...">
-                    <button id="add-button" class="addBtn">Добавить</button>
+                    <button id="add-button" class="addBtn">
+                        <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                    </button>
                 </div>
 
-                <div class="filter-group">
-                    <label for="dropdownFilter">Фильтр</label>
-                    <select id="filter", name="filter">
-                        <option value="all">Все</option>
-                        <option value="checked">Завершенные</option>
-                        <option value="unchecked">Незавершенные</option>
-                    </select>
+                <div class="icon-filters">
+                    <button class="filter-btn active" data-filter="all" title="Все"></button>
+                    <button class="filter-btn" data-filter="checked" title="Завершенные"></button>
+                    <button class="filter-btn" data-filter="unchecked" title="Незавершенные"></button>
                 </div>
             </div>
             <!-- Список задач -->
