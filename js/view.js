@@ -12,9 +12,6 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
 
-    // Обновляем счетчик задач
-    updateCounter(tasks);
-
     let tasksToShow = []
     switch(filter) {
         case 'all':
@@ -72,6 +69,14 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
             if (task.completed) {
                 taskText.classList.add('completed');
             }
+
+            // Добавляем класс для анимации появления
+            newItem.classList.add('task', 'adding');
+
+            // Убираем класс анимации после ее завершения
+            setTimeout(() => {
+                newItem.classList.remove('adding');
+            }, 300);
 
             // Создаем элемент для галочки
             const checkmark = document.createElement('span');
