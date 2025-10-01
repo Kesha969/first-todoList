@@ -19,27 +19,13 @@ function initFilterButtons() {
     filterButtons.unchecked.innerHTML = SVG_Icons.circle;
 }
 
-initFilterButtons();
-
 const SVG_Icons = {
-    check: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>',
-    trash: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
-    list: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-icon lucide-list"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>',
-    circleCheck: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-icon lucide-circle-check"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
-    circle: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-icon lucide-circle"><circle cx="12" cy="12" r="10"/></svg>'
+    check: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>',
+    trash: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+    list: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>',
+    circleCheck: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
+    circle: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'    
 };
-
-/*filterSelect.innerHTML = `
-    <option value="all">
-        ${SVG_Icons.list} Все
-    </option>
-    <option value="checked">
-        ${SVG_Icons.circleCheck} Завершенные
-    </option>
-    <option value="unchecked">
-        ${SVG_Icons.circle} Незавершенные
-    </option>
-`;*/
 
 // Отображение задач
 export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
@@ -104,10 +90,6 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
                 taskText.classList.add('completed');
             }
 
-            // Создаем элемент для галочки
-            const checkmark = document.createElement('span');
-            checkmark.style.cssText = 'color: white; font-weight: bold; font-size: 12px;';
-
             // Кнопка выполнения
             const completeBtn = document.createElement('button');
             completeBtn.className = 'complete-btn';
@@ -140,12 +122,14 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
             newItem.appendChild(completeBtn);
             newItem.appendChild(deleteBtn);
 
+            // Временное редактирование текста
             newItem.addEventListener('dblclick', () => {
                 if (!task.completed) {
                     onStartEdit(task.id);
                 }
             });
 
+            // Для будущего открывающегося окна с более подробной информацией задачи
             newItem.addEventListener('click', (e) => {
                 // Проверяем что кликнули не по кнопкам
                 if (e.target !== completeBtn && e.target !== deleteBtn) {
@@ -176,6 +160,7 @@ export function updateCounter(tasks) {
 
 // Получение DOM элементов
 export function getDOMElements() {
+    initFilterButtons();
     return { 
         taskInput, 
         addButton, 

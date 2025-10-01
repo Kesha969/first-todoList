@@ -237,18 +237,21 @@ li:hover {
 }
 
 /* ===== КНОПКИ УПРАВЛЕНИЯ ФИЛЬТРАМИ ==== */
+.icon-filters {
+    display: flex;
+    gap: 8px;
+}
+
 .filter-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 14px 24px;
-    border-radius: 8px;
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 6px;
+    padding: 8px;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
     transition: all 0.3s ease;
-    white-space: nowrap;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .filter-btn:hover {
@@ -263,7 +266,7 @@ li:hover {
 
 .filter-btn.active svg {
     stroke: white;
-}
+}   
 
 /* ===== КНОПКИ УПРАВЛЕНИЯ ЗАДАЧАМИ ===== */
 .complete-btn {
