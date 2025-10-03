@@ -65,7 +65,7 @@ function initApp() {
 }
 
 function setupEventListeners() {
-    const { addButton, taskInput } = View.getDOMElements(); // ← УБРАТЬ filterSelect
+    const { addButton, taskInput } = View.getDOMElements();
     
     // Обработчик добавления задачи
     addButton.addEventListener('click', () => {

@@ -5,7 +5,10 @@ const taskInput = document.querySelector('#task-input');
 const addButton = document.querySelector('#add-button');
 const taskList = document.querySelector('#task-list');
 const taskCounter = document.querySelector('#task-counter');
-const filterSelect = document.querySelector('#filter');
+const overlay = document.querySelector('#overlay-modal');
+const inputModal = document.querySelector('#input-modal');
+const closeModal = document.querySelectorAll('.modal-cross');
+
 
 function initFilterButtons() {
     const filterButtons = {
@@ -178,3 +181,38 @@ export function clearInput() {
 export function focusInput() {
     taskInput.focus();
 }
+
+// Модальное окно
+document.addEventListener('click', function(e) {
+    // Открытие модалки по клику на "Добавить"
+    if (e.target.closest('.input-modal')) {
+        e.preventDefault();
+        const modalElem = document.querySelector('.modal[data-modal="1"]');
+        const overlay = document.querySelector('#overlay-modal');
+        
+        if (modalElem && overlay) {
+            modalElem.classList.add('active');
+            overlay.classList.add('active');
+        }
+    }
+    
+    // Закрытие модалки по клику на крестик
+    if (e.target.closest('.modal-cross')) {
+        const parentModal = e.target.closest('.modal');
+        const overlay = document.querySelector('#overlay-modal');
+        
+        if (parentModal && overlay) {
+            parentModal.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+    }
+    
+    // Закрытие модалки по клику на overlay
+    if (e.target.id === 'overlay-modal') {
+        const openModal = document.querySelector('.modal.active');
+        if (openModal) {
+            openModal.classList.remove('active');
+            e.target.classList.remove('active');
+        }
+    }
+});
