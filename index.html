@@ -31,16 +31,34 @@
                     <a href="#" class="input-modal">Добавить</a>
                     <div class="modal" data-modal="1">
                         <svg class="modal-cross" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                        <p class="modal-title">Модальное окно</p>
+                        <h1 class="modal-title">Добавить задачу</h1>
+                        <input type="text" id="task-input" placeholder="Введите название задачи">
+                        <textarea id="description-input" rows="4" cols="40" placeholder="Введите описание задачи..."></textarea>
+                        <div class="date-time-group">
+                            <input type="date" id="task-date" class="task-date">
+                            <input type="time" id="task-time" class="task-time">
+                        </div>
+                        <p>Приоритет</p>
+                        <div class="icon-prio">
+                            <button class="prio-btn active" prio="first" title="Высокий"></button>
+                            <button class="prio-btn" prio="second" title="Средний"></button>
+                            <button class="prio-btn" prio="third" title="Низкий"></button>
+                            <button id="add-button" class="addBtn">
+                                <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path d="M12 5v14M5 12h14"></path></svg>
+                            </button>
+                            <button id="cancel-button" class="cancelBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="overlay" id="overlay-modal"></div>
 
-                    <input type="text" id="task-input" placeholder="Добавить новую задачу...">
+                    <!-- <input type="text" id="task-input" placeholder="Добавить новую задачу...">
                     <button id="add-button" class="addBtn">
                         <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
                             <path d="M12 5v14M5 12h14"></path>
                         </svg>
-                    </button>
+                    </button> -->
                 </div>
 
                 <div class="icon-filters">

@@ -105,6 +105,24 @@ h1 {
     transform: translateY(-1px);
 }
 
+#description-input {
+    flex-grow: 1;
+    padding: 14px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#description-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    transform: translateY(-1px);
+}
+
 .task.adding {
     animation: slidedown 0.3s ease;
 }
@@ -130,6 +148,44 @@ h1 {
 .addBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.cancelBtn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.cancelBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Группа приоритетов */
+.date-time-group {
+    display: flex;
+    gap: 10px;
+}
+
+.task-date, .task-time {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.task-date:focus, .task-time:focus {
+    border-color: #667eea;
+    outline: none;
 }
 
 /* Группа фильтра */
@@ -334,11 +390,13 @@ li:hover {
 }
 
 .modal {
+    opacity: 0;
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.8);
+    transition: all 0.3s ease;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -366,9 +424,47 @@ a {
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
-.modal.active, .overlay.active {
+.modal.active{
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.overlay.active {
     display: block;
 }
+
+/* ===== КНОПКИ УПРАВЛЕНИЯ ПРИОРИТЕТАМИ В МОДАЛЬНЫХ ОКНАХ ==== */
+.icon-prio {
+    display: flex;
+    gap: 8px;
+}
+
+.prio-btn {
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prio-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.prio-btn.active {
+    border-color: #667eea;
+    background: #667eea;
+}
+
+.prio-btn.active svg {
+    stroke: white;
+}   
 
 /* ===== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ===== */
 @media (max-width: 768px) {

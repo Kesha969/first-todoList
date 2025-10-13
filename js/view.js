@@ -8,7 +8,13 @@ const taskCounter = document.querySelector('#task-counter');
 const overlay = document.querySelector('#overlay-modal');
 const inputModal = document.querySelector('#input-modal');
 const closeModal = document.querySelectorAll('.modal-cross');
+const date = document.getElementById('task-date').value;
+const time = document.getElementById('task-time').value;
 
+const dueDate = time ? `${date}T${time}:00` : date;
+
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('task-date').min = today;  
 
 function initFilterButtons() {
     const filterButtons = {
@@ -27,7 +33,10 @@ const SVG_Icons = {
     trash: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
     list: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg>',
     circleCheck: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
-    circle: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'    
+    circle: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>',
+    prio1: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tally1-icon lucide-tally-1"><path d="M4 4v16"/></svg>',
+    prio2: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tally2-icon lucide-tally-2"><path d="M4 4v16"/><path d="M9 4v16"/></svg>',
+    prio3: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tally3-icon lucide-tally-3"><path d="M4 4v16"/><path d="M9 4v16"/><path d="M14 4v16"/></svg>'
 };
 
 // Отображение задач
@@ -136,7 +145,7 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
             newItem.addEventListener('click', (e) => {
                 // Проверяем что кликнули не по кнопкам
                 if (e.target !== completeBtn && e.target !== deleteBtn) {
-                    onSelectTask(task.id);
+                    openTaskModal(task);
                 }
             });
 
@@ -164,6 +173,7 @@ export function updateCounter(tasks) {
 // Получение DOM элементов
 export function getDOMElements() {
     initFilterButtons();
+    initPrioButtons();
     return { 
         taskInput, 
         addButton, 
@@ -183,6 +193,41 @@ export function focusInput() {
 }
 
 // Модальное окно
+function closeAllModals() {
+    // Закрываем все модальные окна
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.classList.remove('active');
+    });
+    
+    // Закрываем overlay
+    const overlay = document.querySelector('#overlay-modal');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+}
+
+function validateDateTime() {
+    const date = document.getElementById('task-date').value;
+    if (!date) {
+        alert('Пожалуйста, выберите дату');
+        return false;
+    }
+    return true;
+}
+
+function initPrioButtons() {
+    const prioButtons = {
+        first: document.querySelector('[prio="first"]'),
+        second: document.querySelector('[prio="second"]'),
+        third: document.querySelector('[prio="third"]')
+    };
+    
+    prioButtons.first.innerHTML = SVG_Icons.prio1;
+    prioButtons.second.innerHTML = SVG_Icons.prio2;
+    prioButtons.third.innerHTML = SVG_Icons.prio3;
+}
+
 document.addEventListener('click', function(e) {
     // Открытие модалки по клику на "Добавить"
     if (e.target.closest('.input-modal')) {
@@ -198,21 +243,17 @@ document.addEventListener('click', function(e) {
     
     // Закрытие модалки по клику на крестик
     if (e.target.closest('.modal-cross')) {
-        const parentModal = e.target.closest('.modal');
-        const overlay = document.querySelector('#overlay-modal');
-        
-        if (parentModal && overlay) {
-            parentModal.classList.remove('active');
-            overlay.classList.remove('active');
-        }
+        closeAllModals();
     }
     
     // Закрытие модалки по клику на overlay
     if (e.target.id === 'overlay-modal') {
-        const openModal = document.querySelector('.modal.active');
-        if (openModal) {
-            openModal.classList.remove('active');
-            e.target.classList.remove('active');
-        }
+        closeAllModals();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+        closeAllModals();
     }
 });
