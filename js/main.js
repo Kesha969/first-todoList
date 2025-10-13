@@ -76,6 +76,19 @@ function setupEventListeners() {
             View.clearInput();
         }
     });
+
+    // обработчик для кнопок-приоритетов
+    const prioButtons = document.querySelectorAll('.prio-btn');
+    prioButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const prio = e.currentTarget.dataset.prio;
+            refreshView();
+            
+            // Обновляем активную кнопку
+            prioButtons.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+        });
+    });
     
     // обработчик для кнопок-фильтров
     const filterButtons = document.querySelectorAll('.filter-btn');

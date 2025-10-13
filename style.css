@@ -131,7 +131,14 @@ h1 {
     animation: slideup 0.3s ease;
 }
 
-.addBtn {
+/*  Группа кнопок  */
+.btn-group {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+
+.addBtn, .cancelBtn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
@@ -145,26 +152,7 @@ h1 {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.addBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.cancelBtn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 14px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.cancelBtn:hover {
+.addBtn:hover, .cancelBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
@@ -438,6 +426,7 @@ a {
 .icon-prio {
     display: flex;
     gap: 8px;
+    margin-bottom: 6px;
 }
 
 .prio-btn {
