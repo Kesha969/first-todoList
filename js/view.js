@@ -1,7 +1,6 @@
 import * as State from "./state.js";
 
 // Получаем DOM элементы
-const taskInput = document.querySelector('#task-input');
 const addButton = document.querySelector('#add-button');
 const taskList = document.querySelector('#task-list');
 const taskCounter = document.querySelector('#task-counter');
@@ -189,21 +188,10 @@ export function getDOMElements() {
     initPrioButtons();
     initModalForm();
     return { 
-        taskInput, 
         addButton, 
         taskList, 
         taskCounter 
     };
-}
-
-// Очистка строки ввода
-export function clearInput() {
-    taskInput.value = '';
-}
-
-// Фокус на строке ввода
-export function focusInput() {
-    taskInput.focus();
 }
 
 // Модальное окно

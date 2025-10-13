@@ -32,13 +32,13 @@
                     <div class="modal" data-modal="1">
                         <svg class="modal-cross" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                         <h1 class="modal-title">Добавить задачу</h1>
-                        <input type="text" id="task-input" class="task-input" placeholder="Введите название задачи">
+                        <input type="text" id="task-title" class="task-input" placeholder="Введите название задачи" required>
                         <span class="error-message">Поле обязательно для заполнения</span>
-                        <textarea id="description-input" class="description-input" rows="4" cols="40" placeholder="Введите описание задачи..."></textarea>
+                        <textarea id="task-description" class="description-input" rows="4" cols="40" placeholder="Введите описание задачи..."></textarea>
                         <div class="date-time-group">
-                            <input type="date" id="task-date" class="task-date">
+                            <input type="date" id="task-date" class="task-date" required>
                             <span class="error-message">Пожалуйста, выберите дату</span>
-                            <input type="time" id="task-time" class="task-time">
+                            <input type="time" id="task-time" class="task-time" required>
                             <span class="error-message">Пожалуйста, выберите время</span>
                         </div>
                         <p>Приоритет</p>

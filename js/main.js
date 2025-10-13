@@ -65,7 +65,6 @@ function initApp() {
 }
 
 function setupEventListeners() {
-    const { addButton, taskInput } = View.getDOMElements();
     
     // Обработчик фильтра
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -79,13 +78,6 @@ function setupEventListeners() {
             filterButtons.forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
         });
-    });
-    
-    // Enter для добавления
-    taskInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            addButton.click();
-        }
     });
 }
 
