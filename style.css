@@ -81,13 +81,15 @@ h1 {
 
 /* Группа ввода задачи */
 .input-group {
+    position: relative;
+    margin-bottom: 20px;
     display: flex;
     gap: 12px;
     flex: 1;
     min-width: 300px;
 }
 
-#task-input {
+.task-input, .description-input, .task-date, .task-time {
     flex-grow: 1;
     padding: 14px 16px;
     border: 2px solid #e9ecef;
@@ -98,29 +100,27 @@ h1 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-#task-input:focus {
+.task-input:focus, .description-input:focus, .task-date:focus, .task-time:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
     transform: translateY(-1px);
 }
 
-#description-input {
-    flex-grow: 1;
-    padding: 14px 16px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    font-size: 16px;
-    background: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+.task-input.error, .task-textarea.error, .task-date.error, .task-time.error {
+    border-color: #e74c3c;
+    background-color: #fdf2f2;
 }
 
-#description-input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-    transform: translateY(-1px);
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
 }
 
 .task.adding {
@@ -163,13 +163,7 @@ h1 {
     gap: 10px;
 }
 
-.task-date, .task-time {
-    flex: 1;
-    padding: 10px;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    font-size: 14px;
-}
+
 
 .task-date:focus, .task-time:focus {
     border-color: #667eea;

@@ -8,13 +8,26 @@ const taskCounter = document.querySelector('#task-counter');
 const overlay = document.querySelector('#overlay-modal');
 const inputModal = document.querySelector('#input-modal');
 const closeModal = document.querySelectorAll('.modal-cross');
-const date = document.getElementById('task-date').value;
-const time = document.getElementById('task-time').value;
 
-const dueDate = time ? `${date}T${time}:00` : date;
-
-const today = new Date().toISOString().split('T')[0];
-document.getElementById('task-date').min = today;  
+function getFormData() {
+    const titleField = document.getElementById('task-title');
+    const descField = document.getElementById('task-description');
+    const dateField = document.getElementById('task-date');
+    const activePrio = document.querySelector('.prio-btn.active');
+    
+    // Проверка что элементы найдены
+    if (!titleField || !dateField || !activePrio) {
+        console.error('Form elements not found');
+        return null;
+    }
+    
+    return {
+        title: titleField.value,
+        description: descField ? descField.value : '',
+        date: dateField.value,
+        priority: activePrio.getAttribute('prio')
+    };
+}
 
 function initFilterButtons() {
     const filterButtons = {
@@ -174,6 +187,7 @@ export function updateCounter(tasks) {
 export function getDOMElements() {
     initFilterButtons();
     initPrioButtons();
+    initModalForm();
     return { 
         taskInput, 
         addButton, 
@@ -207,13 +221,115 @@ function closeAllModals() {
     }
 }
 
-function validateDateTime() {
+/* function validateDateTime() {
     const date = document.getElementById('task-date').value;
     if (!date) {
         alert('Пожалуйста, выберите дату');
         return false;
     }
     return true;
+} */
+
+// Функция валидации одного поля
+function validateField(field) {
+    const errorMessage = field.nextElementSibling;
+    
+    if (field.hasAttribute('required') && !field.value.trim()) {
+        field.classList.add('error');
+        if (errorMessage && errorMessage.classList.contains('error-message')) {
+            errorMessage.classList.add('show');
+        }
+        return false;
+    } else {
+        field.classList.remove('error');
+        if (errorMessage && errorMessage.classList.contains('error-message')) {
+            errorMessage.classList.remove('show');
+        }
+        return true;
+    }
+}
+
+// Валидация всей формы
+function validateForm() {
+    const fields = document.querySelectorAll('#task-title, #task-date, #task-time');
+    let isValid = true;
+    
+    fields.forEach(field => {
+        if (!validateField(field)) {
+            isValid = false;
+        }
+    });
+    
+    return isValid;
+}
+
+// Обработчики событий для полей
+function setupFormValidation() {
+    const fields = document.querySelectorAll('#task-title, #task-description, #task-date');
+    
+    fields.forEach(field => {
+        // Валидация при уходе с поля (blur)
+        field.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        // Убираем ошибку при начале ввода
+        field.addEventListener('input', function() {
+            if (this.classList.contains('error')) {
+                this.classList.remove('error');
+                const errorMessage = this.nextElementSibling;
+                if (errorMessage && errorMessage.classList.contains('error-message')) {
+                    errorMessage.classList.remove('show');
+                }
+            }
+        });
+    });
+}
+
+// Инициализация при открытии модалки
+function initModalForm() {
+    // Установка минимальной даты
+    const today = new Date().toISOString().split('T')[0];
+    const dateField = document.getElementById('task-date');
+    if (dateField) {
+        dateField.min = today;
+    }
+    
+    setupFormValidation();
+    
+    // Обработчик для кнопки СОЗДАНИЯ задачи в модалке
+    const createTaskBtn = document.querySelector('#create-task-btn'); // нужно изменить ID в HTML
+    if (createTaskBtn) {
+        createTaskBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                const formData = getFormData();
+                console.log('Данные формы:', formData);
+                // ... создание задачи ...
+                closeAllModals();
+            } else {
+                alert('Пожалуйста, заполните обязательные поля');
+            }
+        });
+    }
+    
+    // Сброс формы при открытии
+    document.querySelector('.input-modal').addEventListener('click', function() {
+        // Сбрасываем форму
+        const form = document.querySelector('.modal-form');
+        if (form) form.reset();
+        
+        // Сбрасываем ошибки
+        document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+        document.querySelectorAll('.error-message.show').forEach(el => el.classList.remove('show'));
+        
+        // Сбрасываем приоритет на первый
+        const prioButtons = document.querySelectorAll('.prio-btn');
+        prioButtons.forEach((btn, index) => {
+            btn.classList.toggle('active', index === 0);
+        });
+    });
 }
 
 function initPrioButtons() {
@@ -239,6 +355,22 @@ document.addEventListener('click', function(e) {
             modalElem.classList.add('active');
             overlay.classList.add('active');
         }
+    }
+
+    // Обработчик кнопок приоритетов
+    if (e.target.closest('.prio-btn')) {
+        e.preventDefault();
+        e.stopPropagation(); // ← ВАЖНО: останавливаем всплытие
+        
+        const clickedBtn = e.target.closest('.prio-btn');
+        const allPrioBtns = document.querySelectorAll('.prio-btn');
+        
+        // Снимаем active со всех кнопок
+        allPrioBtns.forEach(btn => btn.classList.remove('active'));
+        // Добавляем active к нажатой кнопке
+        clickedBtn.classList.add('active');
+        
+        return; // ← останавливаем дальнейшую обработку
     }
     
     // Закрытие модалки по клику на крестик

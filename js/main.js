@@ -67,30 +67,7 @@ function initApp() {
 function setupEventListeners() {
     const { addButton, taskInput } = View.getDOMElements();
     
-    // Обработчик добавления задачи
-    addButton.addEventListener('click', () => {
-        const text = taskInput.value;
-        if (text.trim()) {
-            State.addTask(text);
-            refreshView();
-            View.clearInput();
-        }
-    });
-
-    // обработчик для кнопок-приоритетов
-    const prioButtons = document.querySelectorAll('.prio-btn');
-    prioButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const prio = e.currentTarget.dataset.prio;
-            refreshView();
-            
-            // Обновляем активную кнопку
-            prioButtons.forEach(b => b.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-        });
-    });
-    
-    // обработчик для кнопок-фильтров
+    // Обработчик фильтра
     const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
