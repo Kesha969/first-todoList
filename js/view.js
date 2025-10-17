@@ -184,9 +184,6 @@ export function updateCounter(tasks) {
 
 // Получение DOM элементов
 export function getDOMElements() {
-    initFilterButtons();
-    initPrioButtons();
-    initModalForm();
     return { 
         addButton, 
         taskList, 
@@ -376,4 +373,10 @@ document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape') {
         closeAllModals();
     }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    initFilterButtons();
+    initPrioButtons();
+    initModalForm();
 });
