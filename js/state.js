@@ -17,11 +17,16 @@ export function getTasks() { return tasks; }
 export function getCurrentFilter() { return currentFilter; }
 
 // Добавление задачи
-export function addTask(text) {
+export function addTask(formData) {
     const newTask = {
         id: crypto.randomUUID(),
-        text: text.trim(),
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        date: formData.date.trim(),
+        time: formData.time.trim(),
+        prio: formData.prio,
         completed: false
+        
     };
     tasks.unshift(newTask);
     Storage.saveTasks(tasks);
@@ -42,13 +47,21 @@ export function toggleTaskCompletion(id) {
     }
 }
 
-export function editTask(id, newText) {
+export function editTask(newTaskData, id) {
     const task = tasks.find(task => task.id === id);
-    if (task && newText.trim()) {
-        task.text = newText.trim();
+    console.log('Редактируем задачу:', task, 'новые данные:', newTaskData);
+    
+    if (task) {
+        task.title = newTaskData.title.trim();
+        task.description = newTaskData.description.trim();
+        task.date = newTaskData.date.trim();
+        task.time = newTaskData.time.trim();
+        task.prio = newTaskData.priority;
         Storage.saveTasks(tasks);
+        console.log('Задача обновлена:', task);
         return true;
     }
+    console.error('Задача не найдена для редактирования');
     return false;
 }
 

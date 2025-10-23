@@ -22,6 +22,10 @@ h1 {
     font-weight: 300;
 }
 
+a {
+    text-decoration: none;
+}
+
 /* ===== СТИЛИ ДЛЯ СЧЕТЧИКА ЗАДАЧ ===== */
 .tasks-counter {
     display: flex;
@@ -89,7 +93,8 @@ h1 {
     min-width: 300px;
 }
 
-.task-title, .task-description, .task-date, .task-time {
+.task-title, .task-description, .task-date, .task-time,
+.task-title-edit, .task-description-edit, .task-date-edit, .task-time-edit {
     flex-grow: 1;
     padding: 14px 16px;
     border: 2px solid #e9ecef;
@@ -100,7 +105,8 @@ h1 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.task-title:focus, .task-description:focus, .task-date:focus, .task-time:focus {
+.task-title:focus, .task-description:focus, .task-date:focus, .task-time:focus,
+.task-title-edit:focus, .task-description-edit:focus, .task-date-edit:focus, .task-time-edit:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
@@ -112,14 +118,14 @@ h1 {
     background-color: #fdf2f2;
 }
 
-.error-message {
+.error-message, .error-message-edit {
     color: #e74c3c;
     font-size: 12px;
     margin-top: 5px;
     display: none;
 }
 
-.error-message.show {
+.error-message.show, .error-message-edit.show {
     display: block;
 }
 
@@ -131,6 +137,10 @@ h1 {
     animation: slideup 0.3s ease;
 }
 
+.input-modal{
+    color: #e9ecef;
+}
+
 /*  Группа кнопок  */
 .btn-group {
     position: absolute;
@@ -138,7 +148,7 @@ h1 {
     bottom: 20px;
 }
 
-.addBtn, .cancelBtn {
+.addBtn, .cancelBtn, .editBtn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
@@ -152,7 +162,7 @@ h1 {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.addBtn:hover, .cancelBtn:hover {
+.addBtn:hover, .cancelBtn:hover, .editBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }

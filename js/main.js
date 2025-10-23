@@ -21,11 +21,8 @@ function onStartEdit(taskId) {
     refreshView();
 }
 
-function onEdit(taskId, newText) {
-    if (newText !== undefined && newText.trim() !== '') {
-        State.editTask(taskId, newText);
-    }
-    State.stopEditing(); // ← всегда завершаем редактирование
+function onEdit(taskData, taskId) {
+    State.editTask(taskData, taskId);
     refreshView();
 }
 

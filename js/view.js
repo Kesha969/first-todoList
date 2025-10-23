@@ -12,10 +12,11 @@ function getFormData() {
     const titleField = document.getElementById('task-title');
     const descField = document.getElementById('task-description');
     const dateField = document.getElementById('task-date');
+    const timeField = document.getElementById('task-time');
     const activePrio = document.querySelector('.prio-btn.active');
     
     // Проверка что элементы найдены
-    if (!titleField || !dateField || !activePrio) {
+    if (!titleField || !dateField || !timeField || !activePrio) {
         console.error('Form elements not found');
         return null;
     }
@@ -24,8 +25,42 @@ function getFormData() {
         title: titleField.value,
         description: descField ? descField.value : '',
         date: dateField.value,
+        time: timeField.value,
         priority: activePrio.getAttribute('prio')
     };
+}
+
+function getFormDataEdit() {
+    console.log("=== getFormDataEdit вызван ===");
+    
+    // Поиск элементов формы редактирования
+    const titleField = document.querySelector('#task-title-edit');
+    const descriptionField = document.querySelector('#task-description-edit');
+    const dateField = document.querySelector('#task-date-edit');
+    const timeField = document.querySelector('#task-time-edit');
+    
+    console.log("Найденные элементы:");
+    console.log("titlefield:", titleField);
+    console.log("description:", descriptionField);
+    console.log("datefield:", dateField);
+    console.log("timefield:", timeField);
+    
+    // Проверка, что все элементы найдены
+    if (!titleField || !descriptionField || !dateField || !timeField) {
+        console.log("❌ Form elements not found");
+        return null;
+    }
+    
+    // Сбор данных формы
+    const formData = {
+        title: titleField.value.trim(),
+        description: descriptionField.value.trim(),
+        date: dateField.value,
+        time: timeField.value
+    };
+    
+    console.log("✅ Form data collected:", formData);
+    return formData;
 }
 
 function initFilterButtons() {
@@ -80,7 +115,7 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
             newItem.style.pointerEvents = 'none';
             
             const input = document.createElement('input');
-            input.value = task.text;
+            input.value = task.title;
             input.className = 'task-input';
             
             // Делаем ТОЛЬКО input кликабельным
@@ -106,7 +141,7 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
         } else {
             // Обычный режим - показываем span
             const taskText = document.createElement('span');
-            taskText.textContent = task.text;
+            taskText.textContent = task.title;  
             taskText.className = 'task-text'; 
 
             // Класс для выполнения задач (только для текста)
@@ -157,7 +192,8 @@ export function renderTasks(tasks, filter, onToggle, onDelete, onEdit, onStartEd
             newItem.addEventListener('click', (e) => {
                 // Проверяем что кликнули не по кнопкам
                 if (e.target !== completeBtn && e.target !== deleteBtn) {
-                    openTaskModal(task);
+                    State.startEditing(task.id);
+                    openTaskModal(e, task);
                 }
             });
 
@@ -182,15 +218,6 @@ export function updateCounter(tasks) {
     uncompletedCounter.textContent = uncompletedTasks;
 }
 
-// Получение DOM элементов
-export function getDOMElements() {
-    return { 
-        addButton, 
-        taskList, 
-        taskCounter 
-    };
-}
-
 // Модальное окно
 function closeAllModals() {
     // Закрываем все модальные окна
@@ -206,28 +233,20 @@ function closeAllModals() {
     }
 }
 
-/* function validateDateTime() {
-    const date = document.getElementById('task-date').value;
-    if (!date) {
-        alert('Пожалуйста, выберите дату');
-        return false;
-    }
-    return true;
-} */
-
 // Функция валидации одного поля
 function validateField(field) {
-    const errorMessage = field.nextElementSibling;
+    const parent = field.parentElement;
+    const errorMessage = parent.querySelector('.error-message');
     
     if (field.hasAttribute('required') && !field.value.trim()) {
         field.classList.add('error');
-        if (errorMessage && errorMessage.classList.contains('error-message')) {
+        if (errorMessage) {
             errorMessage.classList.add('show');
         }
         return false;
     } else {
         field.classList.remove('error');
-        if (errorMessage && errorMessage.classList.contains('error-message')) {
+        if (errorMessage) {
             errorMessage.classList.remove('show');
         }
         return true;
@@ -237,6 +256,20 @@ function validateField(field) {
 // Валидация всей формы
 function validateForm() {
     const fields = document.querySelectorAll('#task-title, #task-date, #task-time');
+    let isValid = true;
+    
+    fields.forEach(field => {
+        if (!validateField(field)) {
+            isValid = false;
+        }
+    });
+    
+    return isValid;
+}
+
+// Валидация всей формы для редактирования
+function validateFormEdit() {
+    const fields = document.querySelectorAll('#task-title-edit, #task-date-edit, #task-time-edit');
     let isValid = true;
     
     fields.forEach(field => {
@@ -283,7 +316,7 @@ function initModalForm() {
     setupFormValidation();
     
     // Обработчик для кнопки СОЗДАНИЯ задачи в модалке
-    const createTaskBtn = document.querySelector('#create-task-btn'); // нужно изменить ID в HTML
+    const createTaskBtn = document.querySelector('#create-task-btn');
     if (createTaskBtn) {
         createTaskBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -292,6 +325,7 @@ function initModalForm() {
                 const formData = getFormData();
                 console.log('Данные формы:', formData);
                 // ... создание задачи ...
+                State.addTask(formData);
                 closeAllModals();
             } else {
                 alert('Пожалуйста, заполните обязательные поля');
@@ -327,6 +361,71 @@ function initPrioButtons() {
     prioButtons.first.innerHTML = SVG_Icons.prio1;
     prioButtons.second.innerHTML = SVG_Icons.prio2;
     prioButtons.third.innerHTML = SVG_Icons.prio3;
+}
+
+function openTaskModal(e, task) {
+    console.log('openTaskModal вызван для задачи:', task);
+    const modalElem = document.querySelector('.modal[data-modal="2"]');
+    const overlay = document.querySelector('#overlay-modal');
+
+    // Заполняем поля формы данными задачи
+    const editTitle = document.getElementById('task-title-edit');
+    const editDescription = document.getElementById('task-description-edit');
+    const editDate = document.getElementById('task-date-edit');
+    const editTime = document.getElementById('task-time-edit');
+
+    if (editTitle) editTitle.value = task.title || '';
+    if (editDescription) editDescription.value = task.description || '';
+    if (editDate) editDate.value = task.date || '';
+    if (editTime) editTime.value = task.time || '';
+
+    // Устанавливаем активный приоритет
+    const prioButtons = document.querySelectorAll('.prio-btn-edit');
+    prioButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('prio') === task.prio) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Сохраняем ID редактируемой задачи в data-атрибут модалки
+    if (modalElem) {
+        modalElem.setAttribute('data-editing-task-id', task.id);
+    }
+
+    if (modalElem && overlay) {
+        modalElem.classList.add('active');
+        overlay.classList.add('active');
+    }
+}
+
+function handleEditTask(e) {
+    e.preventDefault();
+    console.log('Кнопка редактирования нажата');
+    
+    const modalElem = document.querySelector('.modal[data-modal="2"]');
+    const taskId = modalElem ? modalElem.getAttribute('data-editing-task-id') : null;
+    
+    if (!taskId) {
+        console.error('ID задачи не найден');
+        return;
+    }
+
+    if (validateFormEdit()) {
+        const formData = getFormDataEdit();
+        console.log('Данные для редактирования:', formData, 'ID:', taskId);
+        
+        // Вызываем колбэк onEdit из main.js
+        // Нужно найти способ вызвать onEdit из main.js
+        // Временное решение - обновим State напрямую
+        State.editTask(formData, taskId);
+        closeAllModals();
+        
+        // Нужно вызвать refreshView() - пока сделаем перезагрузку
+        location.reload(); // Временное решение
+    } else {
+        alert('Пожалуйста, заполните обязательные поля');
+    }
 }
 
 document.addEventListener('click', function(e) {
@@ -379,4 +478,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initFilterButtons();
     initPrioButtons();
     initModalForm();
+    
+    const editTaskBtn = document.getElementById('edit-task-btn');
+    if (editTaskBtn) {
+        editTaskBtn.addEventListener('click', handleEditTask);
+    }
 });
