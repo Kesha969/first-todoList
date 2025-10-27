@@ -78,5 +78,9 @@ function setupEventListeners() {
     });
 }
 
+window.addEventListener('taskUpdated', function() {
+    refreshView();
+});
+
 // Запускаем приложение когда DOM загружен
 document.addEventListener('DOMContentLoaded', initApp);

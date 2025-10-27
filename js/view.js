@@ -327,6 +327,8 @@ function initModalForm() {
                 // ... создание задачи ...
                 State.addTask(formData);
                 closeAllModals();
+
+                window.dispatchEvent(new CustomEvent('taskUpdated'));
             } else {
                 alert('Пожалуйста, заполните обязательные поля');
             }
@@ -335,32 +337,35 @@ function initModalForm() {
     
     // Сброс формы при открытии
     document.querySelector('.input-modal').addEventListener('click', function() {
-        // Сбрасываем форму
-        const form = document.querySelector('.modal-form');
-        if (form) form.reset();
-        
-        // Сбрасываем ошибки
-        document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-        document.querySelectorAll('.error-message.show').forEach(el => el.classList.remove('show'));
-        
-        // Сбрасываем приоритет на первый
-        const prioButtons = document.querySelectorAll('.prio-btn');
+        // Сбрасываем приоритет на первый в модалке создания
+        const prioButtons = document.querySelectorAll('.prio-btn-edit'); // ← исправлено
         prioButtons.forEach((btn, index) => {
             btn.classList.toggle('active', index === 0);
         });
     });
 }
 
-function initPrioButtons() {
-    const prioButtons = {
-        first: document.querySelector('[prio="first"]'),
-        second: document.querySelector('[prio="second"]'),
-        third: document.querySelector('[prio="third"]')
-    };
+function initAllPrioButtons() {
+    // Все кнопки приоритета (и создание и редактирование)
+    const allPrioButtons = document.querySelectorAll('.prio-btn, .prio-btn-edit');
     
-    prioButtons.first.innerHTML = SVG_Icons.prio1;
-    prioButtons.second.innerHTML = SVG_Icons.prio2;
-    prioButtons.third.innerHTML = SVG_Icons.prio3;
+    allPrioButtons.forEach(btn => {
+        const prioType = btn.getAttribute('prio');
+        
+        switch(prioType) {
+            case 'first':
+                btn.innerHTML = SVG_Icons.prio1;
+                break;
+            case 'second':
+                btn.innerHTML = SVG_Icons.prio2;
+                break;
+            case 'third':
+                btn.innerHTML = SVG_Icons.prio3;
+                break;
+        }
+    });
+    
+    console.log('Инициализировано кнопок приоритета:', allPrioButtons.length);
 }
 
 function openTaskModal(e, task) {
@@ -378,15 +383,6 @@ function openTaskModal(e, task) {
     if (editDescription) editDescription.value = task.description || '';
     if (editDate) editDate.value = task.date || '';
     if (editTime) editTime.value = task.time || '';
-
-    // Устанавливаем активный приоритет
-    const prioButtons = document.querySelectorAll('.prio-btn-edit');
-    prioButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('prio') === task.prio) {
-            btn.classList.add('active');
-        }
-    });
 
     // Сохраняем ID редактируемой задачи в data-атрибут модалки
     if (modalElem) {
@@ -415,14 +411,10 @@ function handleEditTask(e) {
         const formData = getFormDataEdit();
         console.log('Данные для редактирования:', formData, 'ID:', taskId);
         
-        // Вызываем колбэк onEdit из main.js
-        // Нужно найти способ вызвать onEdit из main.js
-        // Временное решение - обновим State напрямую
         State.editTask(formData, taskId);
         closeAllModals();
         
-        // Нужно вызвать refreshView() - пока сделаем перезагрузку
-        location.reload(); // Временное решение
+        window.dispatchEvent(new CustomEvent('taskUpdated'));
     } else {
         alert('Пожалуйста, заполните обязательные поля');
     }
@@ -468,6 +460,24 @@ document.addEventListener('click', function(e) {
     }
 });
 
+function setupEditPrioButtons() {
+    const editPrioButtons = document.querySelectorAll('.prio-btn-edit');
+    
+    editPrioButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Кнопка приоритета редактирования нажата:', this.getAttribute('prio'));
+            
+            // Снимаем active со всех кнопок приоритета в ЭТОЙ модалке
+            editPrioButtons.forEach(b => b.classList.remove('active'));
+            // Добавляем active к нажатой кнопке
+            this.classList.add('active');
+        });
+    });
+}
+
 document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape') {
         closeAllModals();
@@ -476,8 +486,9 @@ document.addEventListener('keydown', (e) => {
 
 document.addEventListener('DOMContentLoaded', function() {
     initFilterButtons();
-    initPrioButtons();
+    initAllPrioButtons();
     initModalForm();
+    setupEditPrioButtons();
     
     const editTaskBtn = document.getElementById('edit-task-btn');
     if (editTaskBtn) {

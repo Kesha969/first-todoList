@@ -56,7 +56,7 @@ export function editTask(newTaskData, id) {
         task.description = newTaskData.description.trim();
         task.date = newTaskData.date.trim();
         task.time = newTaskData.time.trim();
-        task.prio = newTaskData.priority;
+        task.prio = newTaskData.prio;
         Storage.saveTasks(tasks);
         console.log('Задача обновлена:', task);
         return true;
