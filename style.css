@@ -433,7 +433,7 @@ a {
     margin-bottom: 6px;
 }
 
-.prio-btn {
+.prio-btn, .prio-btn-edit {
     background: white;
     border: 2px solid #667eea;
     border-radius: 6px;
@@ -445,17 +445,17 @@ a {
     justify-content: center;
 }
 
-.prio-btn:hover {
+.prio-btn:hover, .prio-btn-edit:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.prio-btn.active {
+.prio-btn.active, .prio-btn-edit.active {
     border-color: #667eea;
     background: #667eea;
 }
 
-.prio-btn.active svg {
+.prio-btn.active svg, .prio-btn-edit.active svg {
     stroke: white;
 }   
 

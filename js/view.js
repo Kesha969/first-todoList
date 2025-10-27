@@ -9,10 +9,10 @@ const inputModal = document.querySelector('#input-modal');
 const closeModal = document.querySelectorAll('.modal-cross');
 
 function getFormData() {
-    const titleField = document.getElementById('task-title');
-    const descField = document.getElementById('task-description');
-    const dateField = document.getElementById('task-date');
-    const timeField = document.getElementById('task-time');
+    const titleField = document.querySelector('#task-title');
+    const descField = document.querySelector('#task-description');
+    const dateField = document.querySelector('#task-date');
+    const timeField = document.querySelector('#task-time');
     const activePrio = document.querySelector('.prio-btn.active');
     
     // Проверка что элементы найдены
@@ -26,7 +26,7 @@ function getFormData() {
         description: descField ? descField.value : '',
         date: dateField.value,
         time: timeField.value,
-        priority: activePrio.getAttribute('prio')
+        prio: activePrio.getAttribute('prio')
     };
 }
 
