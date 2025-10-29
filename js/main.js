@@ -37,6 +37,7 @@ function refreshView() {
     View.renderTasks(
         State.getTasks(), 
         State.getCurrentFilter(), 
+        State.getCurrentDueFilter(),
         onToggle, 
         onDelete,
         onEdit,
@@ -59,6 +60,14 @@ function initApp() {
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         activeBtn.classList.add('active');
     }
+
+    // Устанавливаем активную кнопку просроченности фильтра
+    const currentDueFilter = State.getCurrentDueFilter();
+    const activeDueBtn = document.querySelector(`[due-filter="${currentDueFilter}"]`);
+    if (activeDueBtn) {
+        document.querySelectorAll('.due-btn').forEach(btn => btn.classList.remove('active'));
+        activeDueBtn.classList.add('active');
+    }
 }
 
 function setupEventListeners() {
@@ -75,6 +84,18 @@ function setupEventListeners() {
             filterButtons.forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
         });
+    });
+    
+    const dueFilterButtons = document.querySelectorAll('.due-btn');
+    dueFilterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const dueFilter = e.currentTarget.dataset.dueFilter;
+            State.setDueFilter(dueFilter);
+            refreshView();
+
+            dueFilterButtons.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+        })
     });
 }
 

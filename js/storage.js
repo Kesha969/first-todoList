@@ -21,6 +21,16 @@ export function saveFilter(filter) {
     localStorage.setItem('filter', filter);
 }
 
+// Сохранение фильтра превышения времени в localStorage
+export function saveDueFilter(dueFilter) {
+    localStorage.setItem('dueFilter', dueFilter);
+}
+
+// Сохранение фильтра превышения времени из localStorage
+export function loadDueFilter() {
+    return localStorage.getItem('dueFilter') || 'all';
+}
+
 // Загрузка фильтра из localStorage
 export function loadFilter() {
     return localStorage.getItem('filter') || 'all';

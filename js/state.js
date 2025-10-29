@@ -2,6 +2,7 @@ import * as Storage from './storage.js';
 
 let tasks = [];
 let currentFilter = 'all';
+let currentDueFilter = 'all';
 let editingTaskId = null;
 let selectedTaskId = null;
 
@@ -9,12 +10,14 @@ let selectedTaskId = null;
 export function initState() {
     tasks = Storage.loadTasks();
     currentFilter = Storage.loadFilter();
-    return { tasks, currentFilter };
+    currentDueFilter = Storage.loadDueFilter();
+    return { tasks, currentFilter, currentDueFilter };
 }
 
 // Экспорт переменных
 export function getTasks() { return tasks; }
 export function getCurrentFilter() { return currentFilter; }
+export function getCurrentDueFilter() { return currentDueFilter; }
 
 // Добавление задачи
 export function addTask(formData) {
@@ -69,6 +72,11 @@ export function editTask(newTaskData, id) {
 export function setFilter(filter) {
     currentFilter = filter;
     Storage.saveFilter(filter);
+}
+
+export function setDueFilter(dueFilter) {
+    currentDueFilter = dueFilter;
+    Storage.saveDueFilter(dueFilter);
 }
 
 // Текущая задача
