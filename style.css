@@ -93,11 +93,15 @@ a {
     min-width: 300px;
 }
 
+.text-area {
+    margin-top: 4px;
+}
+
 .task-title, .task-description, .task-date, .task-time,
 .task-title-edit, .task-description-edit, .task-date-edit, .task-time-edit {
     flex-grow: 1;
     padding: 14px 16px;
-    border: 2px solid #e9ecef;
+    border: 2px solid #39393a;
     border-radius: 8px;
     font-size: 16px;
     background: white;
