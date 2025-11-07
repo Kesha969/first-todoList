@@ -69,12 +69,18 @@ function initFilterButtons() {
     const filterButtons = {
         all: document.querySelector('[data-filter="all"]'),
         checked: document.querySelector('[data-filter="checked"]'),
-        unchecked: document.querySelector('[data-filter="unchecked"]')
+        unchecked: document.querySelector('[data-filter="unchecked"]'),
+        dueAll: document.querySelector('[data-due-filter="all"]'),
+        dueSoon: document.querySelector('[data-due-filter="due-soon"]'),
+        overdue: document.querySelector('[data-due-filter="overdue"]')
     };
     
     filterButtons.all.innerHTML = SVG_Icons.list;
     filterButtons.checked.innerHTML = SVG_Icons.circleCheck;
     filterButtons.unchecked.innerHTML = SVG_Icons.circle;
+    filterButtons.dueAll.innerHTML = SVG_Icons.circle;
+    filterButtons.dueSoon.innerHTML = SVG_Icons.square;
+    filterButtons.overdue.innerHTML = SVG_Icons.triangle;
 }
 
 const SVG_Icons = {
@@ -85,7 +91,9 @@ const SVG_Icons = {
     circle: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>',
     prio1: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tally1-icon lucide-tally-1"><path d="M4 4v16"/></svg>',
     prio2: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tally2-icon lucide-tally-2"><path d="M4 4v16"/><path d="M9 4v16"/></svg>',
-    prio3: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tally3-icon lucide-tally-3"><path d="M4 4v16"/><path d="M9 4v16"/><path d="M14 4v16"/></svg>'
+    prio3: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tally3-icon lucide-tally-3"><path d="M4 4v16"/><path d="M9 4v16"/><path d="M14 4v16"/></svg>',
+    square: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-icon lucide-square"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>',
+    triangle: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-icon lucide-triangle"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>'
 };
 
 function checkTaskDeadlines(task) {
@@ -102,26 +110,70 @@ function checkTaskDeadlines(task) {
     return { isOverdue, isDueSoon };
 }
 
+// Функция для проверки просроченных задач
+function isOverdue(task) {
+    if (task.completed) return false; // Завершенные задачи не считаем просроченными
+    
+    const now = new Date();
+    const taskDateTime = new Date(`${task.date}T${task.time}`);
+    return taskDateTime < now;
+}
+
+// Функция для проверки "скоро дедлайн" (сегодня/завтра)
+function isDueSoon(task) {
+    if (task.completed) return false; // Завершенные задачи не показываем
+    
+    const now = new Date();
+    const taskDateTime = new Date(`${task.date}T${task.time}`);
+    
+    // Задачи на сегодня и завтра
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    // Сравниваем только даты (без времени)
+    const taskDate = new Date(task.date);
+    const todayDate = new Date(now.toDateString());
+    const tomorrowDate = new Date(tomorrow.toDateString());
+    
+    return taskDate.getTime() === todayDate.getTime() || 
+           taskDate.getTime() === tomorrowDate.getTime();
+}
+
 // Отображение задач
 export function renderTasks(tasks, filter, dueFilter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
 
-    let tasksToShow = []
+    let tasksToShowFirstFilter = []
+    let tasksToShowSecondFilter
     switch(filter) {
         case 'all':
-            tasksToShow = tasks;
-        break;
+            tasksToShowFirstFilter = tasks;
+            break;
         case 'checked':
-            tasksToShow = tasks.filter(task => task.completed);
-        break;
+            tasksToShowFirstFilter = tasks.filter(task => task.completed);
+            break;
         case 'unchecked':
-            tasksToShow = tasks.filter(task => !task.completed);;
-        break;
+            tasksToShowFirstFilter = tasks.filter(task => !task.completed);;
+            break;
+    }
+
+    switch(dueFilter) {
+        case 'all':
+            tasksToShowSecondFilter = tasksToShowFirstFilter;
+            break;
+        case 'due-soon':
+            // Задачи на сегодня/завтра
+            tasksToShowSecondFilter = tasksToShowFirstFilter.filter(task => isDueSoon(task));
+            break;
+        case 'overdue':
+            // Просроченные задачи
+            tasksToShowSecondFilter = tasksToShowFirstFilter.filter(task => isOverdue(task));
+            break;
     }
 
     // Создаем элементы для каждой задачи
-    tasksToShow.forEach((task, index) => {
+    tasksToShowSecondFilter.forEach((task, index) => {
         const newItem = document.createElement('li');
         const { isOverdue, isDueSoon } = checkTaskDeadlines(task);
     
@@ -130,7 +182,7 @@ export function renderTasks(tasks, filter, dueFilter, onToggle, onDelete, onEdit
         } else if (isDueSoon) {
             newItem.classList.add('due-soon');
         }
-    
+        
         const taskText = document.createElement('span');
         taskText.textContent = task.title;  
         

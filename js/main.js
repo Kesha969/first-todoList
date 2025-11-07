@@ -63,7 +63,7 @@ function initApp() {
 
     // Устанавливаем активную кнопку просроченности фильтра
     const currentDueFilter = State.getCurrentDueFilter();
-    const activeDueBtn = document.querySelector(`[due-filter="${currentDueFilter}"]`);
+    const activeDueBtn = document.querySelector(`[data-due-filter="${currentDueFilter}"]`);
     if (activeDueBtn) {
         document.querySelectorAll('.due-btn').forEach(btn => btn.classList.remove('active'));
         activeDueBtn.classList.add('active');
