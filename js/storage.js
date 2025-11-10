@@ -26,6 +26,14 @@ export function saveDueFilter(dueFilter) {
     localStorage.setItem('dueFilter', dueFilter);
 }
 
+export function savePrioFilter(prioFilter) {
+    localStorage.setItem('prioFilter', prioFilter);
+}
+
+export function loadPrioFilter() {
+    return localStorage.getItem('prioFilter') || 'first';
+}
+
 // Сохранение фильтра превышения времени из localStorage
 export function loadDueFilter() {
     return localStorage.getItem('dueFilter') || 'all';

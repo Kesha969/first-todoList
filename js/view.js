@@ -72,7 +72,11 @@ function initFilterButtons() {
         unchecked: document.querySelector('[data-filter="unchecked"]'),
         dueAll: document.querySelector('[data-due-filter="all"]'),
         dueSoon: document.querySelector('[data-due-filter="due-soon"]'),
-        overdue: document.querySelector('[data-due-filter="overdue"]')
+        overdue: document.querySelector('[data-due-filter="overdue"]'),
+        priorAll: document.querySelector('[data-prior-filter="all"]'),
+        prior1: document.querySelector('[data-prior-filter="first"]'),
+        prior2: document.querySelector('[data-prior-filter="second"]'),
+        prior3: document.querySelector('[data-prior-filter="third"]')
     };
     
     filterButtons.all.innerHTML = SVG_Icons.list;
@@ -81,6 +85,10 @@ function initFilterButtons() {
     filterButtons.dueAll.innerHTML = SVG_Icons.circle;
     filterButtons.dueSoon.innerHTML = SVG_Icons.square;
     filterButtons.overdue.innerHTML = SVG_Icons.triangle;
+    filterButtons.priorAll.innerHTML = SVG_Icons.list;
+    filterButtons.prior1.innerHTML = SVG_Icons.prio1;
+    filterButtons.prior2.innerHTML = SVG_Icons.prio2;
+    filterButtons.prior3.innerHTML = SVG_Icons.prio3;
 }
 
 const SVG_Icons = {
@@ -140,12 +148,13 @@ function isDueSoon(task) {
 }
 
 // Отображение задач
-export function renderTasks(tasks, filter, dueFilter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
+export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
 
-    let tasksToShowFirstFilter = []
-    let tasksToShowSecondFilter
+    let tasksToShowFirstFilter = [];
+    let tasksToShowSecondFilter = [];
+    let tasksToShowThirdFilter = [];
     switch(filter) {
         case 'all':
             tasksToShowFirstFilter = tasks;
@@ -172,8 +181,24 @@ export function renderTasks(tasks, filter, dueFilter, onToggle, onDelete, onEdit
             break;
     }
 
+    switch(prioFilter) {
+        case 'all':
+            tasksToShowThirdFilter = tasksToShowSecondFilter;
+            break;
+        case 'first':
+            tasksToShowThirdFilter = tasksToShowSecondFilter.filter(task => task.prio === 'first');
+            break;
+        case 'second':
+            tasksToShowThirdFilter = tasksToShowSecondFilter.filter(task => task.prio === 'second');
+            break;
+        case 'third':
+            tasksToShowThirdFilter = tasksToShowSecondFilter.filter(task => task.prio === 'third');
+            break;
+
+    }
+
     // Создаем элементы для каждой задачи
-    tasksToShowSecondFilter.forEach((task, index) => {
+    tasksToShowThirdFilter.forEach((task, index) => {
         const newItem = document.createElement('li');
         const { isOverdue, isDueSoon } = checkTaskDeadlines(task);
     

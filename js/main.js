@@ -38,6 +38,7 @@ function refreshView() {
         State.getTasks(), 
         State.getCurrentFilter(), 
         State.getCurrentDueFilter(),
+        State.getCurrentPrioFilter(),
         onToggle, 
         onDelete,
         onEdit,
@@ -68,6 +69,13 @@ function initApp() {
         document.querySelectorAll('.due-btn').forEach(btn => btn.classList.remove('active'));
         activeDueBtn.classList.add('active');
     }
+
+    const currentPrioFilter = State.getCurrentPrioFilter();
+    const activePrioBtn = document.querySelector(`[data-prior-filter="${currentPrioFilter}"]`);
+    if(activePrioBtn) {
+        document.querySelectorAll('.prior-btn').forEach(btn => btn.classList.remove('active'));
+        activePrioBtn.classList.add('active');
+    }
 }
 
 function setupEventListeners() {
@@ -97,6 +105,19 @@ function setupEventListeners() {
             e.currentTarget.classList.add('active');
         })
     });
+
+    const prioFilterButtons = document.querySelectorAll('.prior-btn');
+    prioFilterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const prioFilter = e.currentTarget.dataset.priorFilter;
+            State.setPrioFilter(prioFilter);
+            console.log('prio filter: ', prioFilter);
+            refreshView();
+
+            prioFilterButtons.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+        })
+    })
 }
 
 window.addEventListener('taskUpdated', function() {
