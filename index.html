@@ -91,37 +91,43 @@
             </div>
 
             <!-- Редактирование задачи -->
-             <div class="edit-group">
-                <div class="modal" data-modal="2">
-                    <svg class="modal-cross" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                    <h1 class="modal-title">Редактировать задачу</h1>
-                    <input type="text" id="task-title-edit" class="task-title-edit" placeholder="Введите название задачи" required>
-                    <span class="error-message-edit">Поле обязательно для заполнения</span>
-                    <textarea id="task-description-edit" class="task-description-edit" rows="4" cols="40" placeholder="Введите описание задачи..."></textarea>
-                    <div class="date-time-group">
-                        <input type="date" id="task-date-edit" class="task-date-edit" required>
-                        <span class="error-message-edit">Пожалуйста, выберите дату</span>
-                        <input type="time" id="task-time-edit" class="task-time-edit" required>
-                        <span class="error-message-edit">Пожалуйста, выберите время</span>
-                    </div>
-                    <p>Приоритет</p>
-                    <div class="icon-prio">
-                        <button class="prio-btn-edit active" prio="first" title="Высокий"></button>
-                        <button class="prio-btn-edit" prio="second" title="Средний"></button>
-                        <button class="prio-btn-edit" prio="third" title="Низкий"></button>
-                    </div>
-                    <div class="btn-group">
-                        <button id="edit-task-btn" class="editBtn">
-                                <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path d="M12 5v14M5 12h14"></path></svg>
+            <div class="edit-filter-row">
+                <div class="edit-group">
+                    <div class="modal" data-modal="2">
+                        <svg class="modal-cross" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        <h1 class="modal-title">Редактировать задачу</h1>
+                        <div class="text-area">
+                            <input type="text" id="task-title-edit" class="task-title-edit" placeholder="Введите название задачи" required>
+                            <span class="error-message-edit">Поле обязательно для заполнения</span>
+                        </div>
+                        <div class="text-area">
+                            <textarea id="task-description-edit" class="task-description-edit" rows="4" cols="40" placeholder="Введите описание задачи..."></textarea>
+                        </div>
+                        <div class="date-time-group">
+                            <input type="date" id="task-date-edit" class="task-date-edit" required>
+                            <span class="error-message-edit">Пожалуйста, выберите дату</span>
+                            <input type="time" id="task-time-edit" class="task-time-edit" required>
+                            <span class="error-message-edit">Пожалуйста, выберите время</span>
+                        </div>
+                        <p>Приоритет</p>
+                        <div class="icon-prio">
+                            <button class="prio-btn-edit active" prio="first" title="Высокий"></button>
+                            <button class="prio-btn-edit" prio="second" title="Средний"></button>
+                            <button class="prio-btn-edit" prio="third" title="Низкий"></button>
+                        </div>
+                        <div class="btn-group">
+                            <button id="edit-task-btn" class="editBtn">
+                                    <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ><path d="M12 5v14M5 12h14"></path></svg>
+                                </button>
+                            <button id="cancel-button" class="cancelBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                             </button>
-                        <button id="cancel-button" class="cancelBtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                        </button>
-                    </div>
-                    <div class="overlay" id="overlay-modal"></div>
+                        </div>
+                        <div class="overlay" id="overlay-modal"></div>
 
+                    </div>
                 </div>
-             </div>
+            </div>
 
             <!-- Список задач -->
             <ul id="task-list"></ul>

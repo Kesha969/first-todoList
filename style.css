@@ -74,7 +74,7 @@ a {
 }
 
 /* ===== СТРОКА С ВВОДОМ И ФИЛЬТРОМ ===== */
-.input-filter-row {
+.input-filter-row, .edit-filter-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -84,13 +84,25 @@ a {
 }
 
 /* Группа ввода задачи */
-.input-group {
+.task-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 12px;
+}
+
+.task-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.input-group, .edit-group {
     position: relative;
     margin-bottom: 20px;
     display: flex;
     gap: 12px;
     flex: 1;
-    min-width: 300px;
+    min-width: 30px;
 }
 
 .text-area {
@@ -117,7 +129,8 @@ a {
     transform: translateY(-1px);
 }
 
-.task-title.error, .task-textarea.error, .task-date.error, .task-time.error {
+.task-title.error, .task-textarea.error, .task-date.error, .task-time.error,
+.task-title-edit.error, .task-textarea-edit.error, .task-date-edit.error, .task-time-edit.error {
     border-color: #e74c3c;
     background-color: #fdf2f2;
 }
@@ -525,62 +538,171 @@ a {
 }   
 
 /* ===== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ===== */
+/* Базовые стили для карточек */
+#task-list li {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    flex-wrap: wrap; /* Позволяет элементам переноситься на мобильных */
+    gap: 12px; /* Отступы между элементами */
+}
+
+/* ===== ДЛЯ ПЛАНШЕТОВ (768px и меньше) ===== */
 @media (max-width: 768px) {
-    .container {
-        padding: 0 15px;
+    #task-list li {
+        padding: 14px 16px;
+        margin-bottom: 8px;
+        gap: 10px;
     }
     
-    .input-filter-row {
+    /* Уменьшаем шрифты */
+    .task-prio-first,
+    .task-prio-second, 
+    .task-prio-third,
+    .date-prio-first,
+    .date-prio-second,
+    .date-prio-third {
+        font-size: 15px;
+        margin: 0 10px;
+    }
+    
+    /* Делаем кнопки больше для удобного тапа */
+    .complete-btn, .delete-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px; /* Фиксируем размер */
+        margin-left: 8px;
+    }
+    
+    /* Увеличиваем область тапа для иконок */
+    .filter-btn, .due-btn, .prior-btn {
+        padding: 10px;
+        min-width: 44px; /* Минимальный размер для тапа */
+        min-height: 44px;
+    }
+}
+
+/* ===== ДЛЯ ТЕЛЕФОНОВ (480px и меньше) ===== */
+@media (max-width: 480px) {
+    #task-list li {
+        padding: 12px;
+        margin-bottom: 6px;
+        border-radius: 8px;
+        gap: 8px;
+    }
+    
+    /* Меняем структуру на мобильных */
+    #task-list li {
+        flex-direction: column; /* Вертикальное расположение */
+        align-items: flex-start;
+    }
+    
+    /* Группируем основные элементы */
+    .task-content {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        width: 100%;
     }
     
-    .input-group {
-        min-width: 100%;
-    }
-    
-    .filter-group {
+    .task-actions {
         align-self: flex-end;
-        margin-top: 10px;
+        margin-top: 8px;
     }
     
+    /* Текст задачи занимает все доступное пространство */
+    .task-prio-first,
+    .task-prio-second,
+    .task-prio-third {
+        flex-grow: 1;
+        margin: 0;
+        font-size: 14px;
+    }
+    
+    /* Дата и время под текстом */
+    .date-prio-first,
+    .date-prio-second, 
+    .date-prio-third {
+        align-self: flex-end;
+        font-size: 12px;
+        margin: 0;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+    
+    /* Кнопки управления в ряд */
+    .task-actions {
+        display: flex;
+        gap: 8px;
+        align-self: flex-end;
+        margin-top: 8px;
+    }
+    
+    .complete-btn, .delete-btn {
+        width: 36px;
+        height: 36px;
+        margin-left: 0;
+    }
+    
+    /* Уменьшаем отступы в контейнере */
+    .container {
+        padding: 0 10px;
+    }
+    
+    /* Уменьшаем заголовок */
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    
+    /* Адаптируем счетчики */
     .tasks-counter {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
+        padding: 12px;
+        margin: 20px 0;
     }
     
-    .counter-item:not(:last-child)::after {
-        display: none;
+    .counter-value {
+        font-size: 24px;
+    }
+}
+
+/* ===== ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ (360px и меньше) ===== */
+@media (max-width: 360px) {
+    #task-list li {
+        padding: 10px;
+    }
+    
+    .task-prio-first,
+    .task-prio-second,
+    .task-prio-third {
+        font-size: 13px;
+    }
+    
+    .date-prio-first,
+    .date-prio-second,
+    .date-prio-third {
+        font-size: 11px;
     }
     
     h1 {
-        font-size: 2em;
+        font-size: 1.6em;
     }
 }
 
-/* Анимация появления новых задач */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* ===== ПЛАВНЫЕ ПЕРЕХОДЫ ===== */
+#task-list li {
+    transition: all 0.3s ease;
 }
 
-@keyframes slideDown {
-    from { 
-        opacity: 0; 
-        transform: translateY(-20px); 
+/* Эффект при нажатии на мобильных */
+@media (max-width: 768px) {
+    #task-list li:active {
+        transform: scale(0.98);
+        background-color: #f8f9fa;
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
-    }
-}
-
-li {
-    animation: slideIn 0.3s ease;
 }

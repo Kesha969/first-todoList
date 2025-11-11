@@ -201,7 +201,13 @@ export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDe
     tasksToShowThirdFilter.forEach((task, index) => {
         const newItem = document.createElement('li');
         const { isOverdue, isDueSoon } = checkTaskDeadlines(task);
-    
+
+        const taskContent = document.createElement('div');
+        taskContent.className = 'task-content';
+
+        const taskActions = document.createElement('div'); 
+        taskActions.className = 'task-actions';
+
         if (isOverdue) {
             newItem.classList.add('overdue');
         } else if (isDueSoon) {
@@ -213,7 +219,7 @@ export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDe
         
         // Дата и время задачи
         const taskDateBlock = document.createElement('span');
-        taskDateBlock.textContent = task.date + '\n' + task.time;
+        taskDateBlock.textContent = task.date + ' ' + task.time;
 
         // Приоритет
         const taskPrio = document.createElement('span');
@@ -235,6 +241,7 @@ export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDe
                 break;
         }
         taskPrio.className = 'task-prio';
+        
         // Класс для выполнения задач (только для текста)
         if (task.completed) {
             taskText.classList.add('completed');
@@ -267,21 +274,17 @@ export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDe
             onDelete(task.id);
         }
         
-        // Собираем в правильном порядке
-        newItem.appendChild(taskPrio);
-        newItem.appendChild(taskText); 
-        newItem.appendChild(completeBtn);
-        newItem.appendChild(deleteBtn);
-        newItem.appendChild(taskDateBlock);
+        taskContent.appendChild(taskPrio);
+        taskContent.appendChild(taskText);
+        taskContent.appendChild(taskDateBlock);
+        
+        taskActions.appendChild(completeBtn);
+        taskActions.appendChild(deleteBtn);
+        
+        newItem.appendChild(taskContent);
+        newItem.appendChild(taskActions);
 
-        // Временное редактирование текста
-        newItem.addEventListener('dblclick', () => {
-            if (!task.completed) {
-                onStartEdit(task.id);
-            }
-        });
-
-        // Для будущего открывающегося окна с более подробной информацией задачи
+        // Редактирование
         newItem.addEventListener('click', (e) => {
             // Проверяем что кликнули не по кнопкам
             if (e.target !== completeBtn && e.target !== deleteBtn) {
