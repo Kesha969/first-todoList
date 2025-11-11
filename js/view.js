@@ -7,6 +7,8 @@ const taskCounter = document.querySelector('#task-counter');
 const overlay = document.querySelector('#overlay-modal');
 const inputModal = document.querySelector('#input-modal');
 const closeModal = document.querySelectorAll('.modal-cross');
+const searchArea = document.querySelector('#search');
+let displaySearchField = '';  
 
 function getFormData() {
     const titleField = document.querySelector('#task-title');
@@ -155,6 +157,7 @@ export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDe
     let tasksToShowFirstFilter = [];
     let tasksToShowSecondFilter = [];
     let tasksToShowThirdFilter = [];
+    let tasksToShowSearch = [];
     switch(filter) {
         case 'all':
             tasksToShowFirstFilter = tasks;
@@ -199,101 +202,105 @@ export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDe
 
     // Создаем элементы для каждой задачи
     tasksToShowThirdFilter.forEach((task, index) => {
-        const newItem = document.createElement('li');
-        const { isOverdue, isDueSoon } = checkTaskDeadlines(task);
+        if (task.title.search(displaySearchField) > 0 || task.description.search(displaySearchField) > 0) {
+            console.log(task.title.search(displaySearchField));
+            const newItem = document.createElement('li');
+            const { isOverdue, isDueSoon } = checkTaskDeadlines(task);
 
-        const taskContent = document.createElement('div');
-        taskContent.className = 'task-content';
+            const taskContent = document.createElement('div');
+            taskContent.className = 'task-content';
 
-        const taskActions = document.createElement('div'); 
-        taskActions.className = 'task-actions';
+            const taskActions = document.createElement('div'); 
+            taskActions.className = 'task-actions';
 
-        if (isOverdue) {
-            newItem.classList.add('overdue');
-        } else if (isDueSoon) {
-            newItem.classList.add('due-soon');
-        }
-        
-        const taskText = document.createElement('span');
-        taskText.textContent = task.title;  
-        
-        // Дата и время задачи
-        const taskDateBlock = document.createElement('span');
-        taskDateBlock.textContent = task.date + ' ' + task.time;
-
-        // Приоритет
-        const taskPrio = document.createElement('span');
-        switch(task.prio) {
-            case 'first':
-                taskPrio.innerHTML = SVG_Icons.prio1;
-                taskText.className = 'task-prio-first'; 
-                taskDateBlock.className = 'date-prio-first';
-                break;
-            case 'second':
-                taskPrio.innerHTML = SVG_Icons.prio2;
-                taskText.className = 'task-prio-second'; 
-                taskDateBlock.className = 'date-prio-second';
-                break;
-            case 'third':
-                taskPrio.innerHTML = SVG_Icons.prio3;
-                taskText.className = 'task-prio-third'; 
-                taskDateBlock.className = 'date-prio-third';
-                break;
-        }
-        taskPrio.className = 'task-prio';
-        
-        // Класс для выполнения задач (только для текста)
-        if (task.completed) {
-            taskText.classList.add('completed');
-        }
-
-        // Кнопка выполнения
-        const completeBtn = document.createElement('button');
-        completeBtn.className = 'complete-btn';
-
-        if (task.completed) {
-            completeBtn.classList.add('checked');
-            completeBtn.style.backgroundColor = '#4CAF50';
-            completeBtn.innerHTML = SVG_Icons.check;
-        } else {
-            completeBtn.style.backgroundColor = 'none';
-            completeBtn.innerHTML = ''; 
-        }
-        
-        completeBtn.onclick = function(e) {
-            e.stopPropagation();
-            onToggle(task.id);
-        }
-
-        // Кнопка удаления
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className  = 'delete-btn';
-        deleteBtn.innerHTML = SVG_Icons.trash;
-        deleteBtn.onclick = function(e) {
-            e.stopPropagation();
-            onDelete(task.id);
-        }
-        
-        taskContent.appendChild(taskPrio);
-        taskContent.appendChild(taskText);
-        taskContent.appendChild(taskDateBlock);
-        
-        taskActions.appendChild(completeBtn);
-        taskActions.appendChild(deleteBtn);
-        
-        newItem.appendChild(taskContent);
-        newItem.appendChild(taskActions);
-
-        // Редактирование
-        newItem.addEventListener('click', (e) => {
-            // Проверяем что кликнули не по кнопкам
-            if (e.target !== completeBtn && e.target !== deleteBtn) {
-                State.startEditing(task.id);
-                openTaskModal(e, task);
+            if (isOverdue) {
+                newItem.classList.add('overdue');
+            } else if (isDueSoon) {
+                newItem.classList.add('due-soon');
             }
-        });
+            
+            const taskText = document.createElement('span');
+            taskText.textContent = task.title;  
+            
+            // Дата и время задачи
+            const taskDateBlock = document.createElement('span');
+            taskDateBlock.textContent = task.date + ' ' + task.time;
 
-        taskList.appendChild(newItem);
+            // Приоритет
+            const taskPrio = document.createElement('span');
+            switch(task.prio) {
+                case 'first':
+                    taskPrio.innerHTML = SVG_Icons.prio1;
+                    taskText.className = 'task-prio-first'; 
+                    taskDateBlock.className = 'date-prio-first';
+                    break;
+                case 'second':
+                    taskPrio.innerHTML = SVG_Icons.prio2;
+                    taskText.className = 'task-prio-second'; 
+                    taskDateBlock.className = 'date-prio-second';
+                    break;
+                case 'third':
+                    taskPrio.innerHTML = SVG_Icons.prio3;
+                    taskText.className = 'task-prio-third'; 
+                    taskDateBlock.className = 'date-prio-third';
+                    break;
+            }
+            taskPrio.className = 'task-prio';
+            
+            // Класс для выполнения задач (только для текста)
+            if (task.completed) {
+                taskText.classList.add('completed');
+            }
+
+            // Кнопка выполнения
+            const completeBtn = document.createElement('button');
+            completeBtn.className = 'complete-btn';
+
+            if (task.completed) {
+                completeBtn.classList.add('checked');
+                completeBtn.style.backgroundColor = '#4CAF50';
+                completeBtn.innerHTML = SVG_Icons.check;
+            } else {
+                completeBtn.style.backgroundColor = 'none';
+                completeBtn.innerHTML = ''; 
+            }
+            
+            completeBtn.onclick = function(e) {
+                e.stopPropagation();
+                onToggle(task.id);
+            }
+
+            // Кнопка удаления
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className  = 'delete-btn';
+            deleteBtn.innerHTML = SVG_Icons.trash;
+            deleteBtn.onclick = function(e) {
+                e.stopPropagation();
+                onDelete(task.id);
+            }
+            
+            taskContent.appendChild(taskPrio);
+            taskContent.appendChild(taskText);
+            taskContent.appendChild(taskDateBlock);
+            
+            taskActions.appendChild(completeBtn);
+            taskActions.appendChild(deleteBtn);
+            
+            newItem.appendChild(taskContent);
+            newItem.appendChild(taskActions);
+
+            // Редактирование
+            newItem.addEventListener('click', (e) => {
+                // Проверяем что кликнули не по кнопкам
+                if (e.target !== completeBtn && e.target !== deleteBtn) {
+                    State.startEditing(task.id);
+                    openTaskModal(e, task);
+                }
+            });
+
+            taskList.appendChild(newItem);
+        }
+        
     });
 
 }
@@ -553,6 +560,16 @@ document.addEventListener('click', function(e) {
     if (e.target.id === 'overlay-modal') {
         closeAllModals();
     }
+});
+
+function addNames(inputevent) {  
+    displayAreaField.textContent = inputevent.target.value;  
+    refreshView();
+}
+
+searchArea.addEventListener('input', function(e) {
+    displaySearchField = e.target.value;
+    console.log('search: ', displaySearchField);
 });
 
 function setupEditPrioButtons() {

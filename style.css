@@ -74,13 +74,24 @@ a {
 }
 
 /* ===== СТРОКА С ВВОДОМ И ФИЛЬТРОМ ===== */
-.input-filter-row, .edit-filter-row {
+.input-filter-row, .edit-filter-row, .search-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
     margin-bottom: 25px;
     flex-wrap: wrap;
+}
+
+.search {
+    flex-grow: 1;
+    padding: 14px 16px;
+    border: 2px solid #39393a;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* Группа ввода задачи */
