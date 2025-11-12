@@ -124,5 +124,11 @@ window.addEventListener('taskUpdated', function() {
     refreshView();
 });
 
+const area = document.querySelector('#search');
+console.log('area: ', area);
+area.addEventListener('input', function(e) {
+    refreshView();
+});
+
 // Запускаем приложение когда DOM загружен
 document.addEventListener('DOMContentLoaded', initApp);
