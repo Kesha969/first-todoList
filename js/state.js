@@ -4,6 +4,7 @@ let tasks = [];
 let currentFilter = 'all';
 let currentDueFilter = 'all';
 let currentPrioFilter = 'first';
+let currentSort = 'name';
 let editingTaskId = null;
 let selectedTaskId = null;
 
@@ -13,7 +14,8 @@ export function initState() {
     currentFilter = Storage.loadFilter();
     currentDueFilter = Storage.loadDueFilter();
     currentPrioFilter = Storage.loadPrioFilter();
-    return { tasks, currentFilter, currentDueFilter, currentPrioFilter };
+    currentSort = Storage.loadSort();
+    return { tasks, currentFilter, currentDueFilter, currentPrioFilter, currentSort };
 }
 
 // Экспорт переменных
@@ -21,6 +23,7 @@ export function getTasks() { return tasks; }
 export function getCurrentFilter() { return currentFilter; }
 export function getCurrentDueFilter() { return currentDueFilter; }
 export function getCurrentPrioFilter() { return currentPrioFilter; }
+export function getCurrentSort() { return currentSort; }
 
 // Добавление задачи
 export function addTask(formData) {
@@ -85,6 +88,12 @@ export function setDueFilter(dueFilter) {
 export function setPrioFilter(prioFilter) {
     currentPrioFilter = prioFilter;
     Storage.savePrioFilter(prioFilter);
+}
+
+// Установка сортировки
+export function setSort(sort) {
+    currentSort = sort;
+    Storage.saveSort(sort);
 }
 
 // Текущая задача

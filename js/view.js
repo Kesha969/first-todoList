@@ -78,7 +78,11 @@ function initFilterButtons() {
         priorAll: document.querySelector('[data-prior-filter="all"]'),
         prior1: document.querySelector('[data-prior-filter="first"]'),
         prior2: document.querySelector('[data-prior-filter="second"]'),
-        prior3: document.querySelector('[data-prior-filter="third"]')
+        prior3: document.querySelector('[data-prior-filter="third"]'),
+        sortName: document.querySelector('[data-sort="name"]'),
+        sortDate: document.querySelector('[data-sort="date"]'),
+        sortPrio: document.querySelector('[data-sort="prio"]'),
+        sortTime: document.querySelector('[data-sort="time"]')
     };
     
     filterButtons.all.innerHTML = SVG_Icons.list;
@@ -150,7 +154,7 @@ function isDueSoon(task) {
 }
 
 // Отображение задач
-export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
+export function renderTasks(tasks, filter, dueFilter, prioFilter, sortFilter, onToggle, onDelete, onEdit, onStartEdit, onSelectTask) {
     // Очищаем список перед рендерингом
     taskList.innerHTML = '';
 
@@ -199,7 +203,31 @@ export function renderTasks(tasks, filter, dueFilter, prioFilter, onToggle, onDe
             break;
     }
 
-
+    switch(sortFilter){
+        case 'name':
+            tasksToShowThirdFilter.sort(function(a, b) {
+                return ((a.title == b.title) ? 0 : ((a.title > b.title) ? 1 : -1));
+            });
+            break;
+        case 'date':
+            tasksToShowThirdFilter.sort((a, b) => {
+                const dateA = a.date ? new Date(a.date) : new Date(0);
+                const dateB = b.date ? new Date(b.date) : new Date(0);
+                return dateA - dateB;
+            });
+            break;
+        case 'time':
+            tasksToShowThirdFilter.sort((a, b) => {
+                if (!a.time || !b.time) return 0;
+                return a.time.localeCompare(b.time);
+            });
+            break;
+        case 'prio':
+            tasksToShowThirdFilter.sort(function(a, b) {
+                return ((a.prio == b.prio) ? 0 : ((a.prio > b.prio) ? 1 : -1));
+            });
+            break;
+    }
 
     // Создаем элементы для каждой задачи
     tasksToShowThirdFilter.forEach((task, index) => {

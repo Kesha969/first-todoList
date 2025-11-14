@@ -379,7 +379,7 @@ li:hover {
     gap: 8px;
 }
 
-.filter-btn, .due-btn, .prior-btn {
+.filter-btn, .due-btn, .prior-btn, .sort-btn {
     background: white;
     border: 2px solid #667eea;
     border-radius: 6px;
@@ -391,17 +391,17 @@ li:hover {
     justify-content: center;
 }
 
-.filter-btn:hover, .due-btn:hover, .prior-btn:hover {
+.filter-btn:hover, .due-btn:hover, .prior-btn:hover, .sort-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.filter-btn.active, .due-btn.active, .prior-btn.active {
+.filter-btn.active, .due-btn.active, .prior-btn.active, .sort-btn.active {
     border-color: #667eea;
     background: #667eea;
 }
 
-.filter-btn.active svg, .due-btn.active svg, .prior-btn.active svg {
+.filter-btn.active svg, .due-btn.active svg, .prior-btn.active svg, .sort-btn.active svg {
     stroke: white;
 }   
 

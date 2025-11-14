@@ -39,6 +39,15 @@ export function loadDueFilter() {
     return localStorage.getItem('dueFilter') || 'all';
 }
 
+// Sort
+export function saveSort(sort) {
+    localStorage.setItem('sort', sort);
+} 
+
+export function loadSort() {
+    return localStorage.getItem('sort') || 'name';
+}
+
 // Загрузка фильтра из localStorage
 export function loadFilter() {
     return localStorage.getItem('filter') || 'all';

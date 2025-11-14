@@ -39,6 +39,7 @@ function refreshView() {
         State.getCurrentFilter(), 
         State.getCurrentDueFilter(),
         State.getCurrentPrioFilter(),
+        State.getCurrentSort(),
         onToggle, 
         onDelete,
         onEdit,
@@ -75,6 +76,13 @@ function initApp() {
     if(activePrioBtn) {
         document.querySelectorAll('.prior-btn').forEach(btn => btn.classList.remove('active'));
         activePrioBtn.classList.add('active');
+    }
+
+    const currentSort = State.getCurrentSort();
+    const activeSortBtn = document.querySelector(`[data-sort="${currentSort}"]`);
+    if(activeSortBtn) {
+        document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+        activeSortBtn.classList.add('active');
     }
 }
 
@@ -115,6 +123,19 @@ function setupEventListeners() {
             refreshView();
 
             prioFilterButtons.forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+        })
+    })
+
+    const sortButtons = document.querySelectorAll('.sort-btn');
+    sortButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const sortFilter = e.currentTarget.dataset.sort;
+            State.setSort(sortFilter);
+            console.log('sort filter: ', sortFilter);
+            refreshView();
+
+            sortButtons.forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
         })
     })
